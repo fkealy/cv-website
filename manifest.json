@@ -1,0 +1,10 @@
+{"name" : "Freddie Kealy CV",
+    "short_name" : "FKealy",
+    "description" : "CV website for Freddie Kealy",
+    "start_url" : "https://www.fkealy.com/index.html",
+    "display" : "minimal-ui",
+    "scope" : "index.html",
+    "orientation" : "any",
+    "lang" : "English",
+    "icons" : [
+    ]}
