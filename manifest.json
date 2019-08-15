@@ -6,5 +6,29 @@
     "scope" : "index.html",
     "orientation" : "any",
     "lang" : "English",
-    "icons" : [
+    "icons" : [ {
+        "src": "/img/FK.ico",
+        "type": "image/x-icon",
+        "sizes": "192x192"
+    },{
+        "src": "/img/FK.svg",
+        "type": "image/x-icon",
+        "sizes": "200x200"
+    }, {
+            "src": "/img/qr.svg",
+            "type": "image/svg+xml",
+            "sizes": "300x300"
+        }, {
+            "src": "/img/github.svg",
+            "type": "image/svg+xml",
+            "sizes": "200x200"
+        }, {
+            "src": "/img/song-sifter.svg",
+            "type": "image/svg+xml",
+            "sizes": "200x200"
+        }, {
+            "src": "/img/villa.svg",
+            "type": "image/svg+xml",
+            "sizes": "200x200"
+        }
     ]}
