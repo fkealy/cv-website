@@ -9,15 +9,24 @@ const DEGREE = Math.PI/180;
 function resize() {
 	// Our canvas must cover full height of screen
 	// regardless of the resolution
-	var width = window.innerWidth;
+	var width;
+	var height;
 
-	// So we need to calculate the proper scaled width
-	// that should work well with every resolution
-	var ratio = cvs.height/cvs.width;
-	var height = width * ratio;
-
+	if(window.innerWidth > window.innerHeight) {
+	    //landscape
+	    height = window.innerHeight;
+	    var ratio = cvs.width/cvs.height;
+	    width = height * ratio;
+	}else {
+	    // So we need to calculate the proper scaled width
+	    // that should work well with every resolution
+	    width = window.innerWidth;
+	    var ratio = cvs.height/cvs.width;
+	    height = width * ratio;
+    }
 	cvs.style.width = width+'px';
 	cvs.style.height = height+'px';
+
 }
 
 window.addEventListener('load', resize, false);
