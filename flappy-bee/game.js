@@ -6,6 +6,23 @@ const ctx = cvs.getContext("2d");
 let frames = 0;
 const DEGREE = Math.PI/180;
 
+function resize() {
+	// Our canvas must cover full height of screen
+	// regardless of the resolution
+	var width = window.innerWidth;
+
+	// So we need to calculate the proper scaled width
+	// that should work well with every resolution
+	var ratio = cvs.height/cvs.width;
+	var height = width * ratio;
+
+	cvs.style.width = width+'px';
+	cvs.style.height = height+'px';
+}
+
+window.addEventListener('load', resize, false);
+window.addEventListener('resize', resize, false);
+
 
 //Load sprite sheet
 const sprite = new Image();

@@ -11,14 +11,23 @@
         display: block;
         margin: 0 auto;
         }
+
+        .disable-dbl-tap-zoom {
+            touch-action: manipulation;
+        }
+
     </style>
 </head>
 
 <body>
-    <canvas id="bee" width="320" height="480">
-
-
-    </canvas>
+<div class="wrapper">
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="bee" class="disable-dbl-tap-zoom" width="320" height="480">
+            </canvas>
+        </div>
+    </div>
+</div>
     <script src="game.js"></script>
 </body>
 
