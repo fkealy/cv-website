@@ -3,17 +3,17 @@
     "description" : "CV website for Freddie Kealy",
     "start_url" : "https://www.fkealy.com/index.html",
     "display" : "minimal-ui",
-    "scope" : "index.html",
+    "scope" : "/",
     "orientation" : "any",
     "lang" : "English",
     "icons" : [ {
         "src": "/img/FK.ico",
         "type": "image/x-icon",
-        "sizes": "192x192"
+        "sizes": "24x24"
     },{
-        "src": "/img/FK.svg",
-        "type": "image/x-icon",
-        "sizes": "200x200"
+        "src": "/flappy-bee/img/sprite.png",
+        "type": "image/png",
+        "sizes": "400x400"
     }, {
             "src": "/img/qr.svg",
             "type": "image/svg+xml",
