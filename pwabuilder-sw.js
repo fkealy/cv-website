@@ -2,7 +2,7 @@
 
 const CACHE = "pwabuilder-page";
 
-const offlineFallbackPage = "index.html";
+const offlineFallbackPage = "flappy-bee/bee.html";
 
 // Install stage sets up the offline page in the cache and opens a new cache
 self.addEventListener("install", function (event) {
