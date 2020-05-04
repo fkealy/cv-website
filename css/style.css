@@ -1342,6 +1342,11 @@ ol {
 /* Large Mobile :480px. */
 @media only screen and (max-width: 767px) {
 
+    .hero-image{
+        width: 300px;
+        margin: auto;
+    }
+
     .hero-section{
         padding-top:0px;
     }
@@ -1351,6 +1356,10 @@ ol {
 	}
 	.hero-text h2 {
 		font-size: 80px;
+	}
+
+	.hero-text p {
+	    font-size: 24px;
 	}
 	.portfolio-warp {
 		padding: 0;

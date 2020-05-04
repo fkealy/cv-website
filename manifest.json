@@ -1,19 +1,19 @@
 {"name" : "Freddie Kealy CV",
     "short_name" : "FKealy",
     "description" : "CV website for Freddie Kealy",
-    "start_url" : "https://www.fkealy.com/index.html",
+    "start_url" : "https://www.fkealy.com/flappy-bee/bee.html",
     "display" : "minimal-ui",
     "scope" : "/",
     "orientation" : "any",
     "lang" : "English",
-    "icons" : [ {
-        "src": "/img/FK.ico",
-        "type": "image/x-icon",
-        "sizes": "24x24"
-    },{
+    "icons" : [{
         "src": "/flappy-bee/img/sprite.png",
         "type": "image/png",
         "sizes": "400x400"
+    }, {
+        "src": "/img/FK.ico",
+        "type": "image/x-icon",
+        "sizes": "24x24"
     }, {
             "src": "/img/qr.svg",
             "type": "image/svg+xml",
