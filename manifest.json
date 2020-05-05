@@ -7,6 +7,10 @@
     "orientation" : "any",
     "lang" : "English",
     "icons" : [{
+        "src": "/flappy-bee/img/bee.png",
+        "type": "image/png",
+        "sizes": "55x50"
+    },{
         "src": "/flappy-bee/img/sprite.png",
         "type": "image/png",
         "sizes": "400x400"
