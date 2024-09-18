@@ -618,6 +618,29 @@ ol {
 	position: relative;
 }
 
+#e71vIT0rXVE9_tr {
+	animation: e71vIT0rXVE9_tr__tr 1000ms linear infinite normal forwards;
+	
+	}
+
+	#e71vIT0rXVE9_tr:hover {
+		animation-play-state: running;
+
+	}
+
+	@keyframes e71vIT0rXVE9_tr__tr {
+	0% {
+		transform: translate(15.669406px, 26.091166px) rotate(8.303318deg);
+		animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+	}
+	50% {
+		transform: translate(15.669406px, 26.091166px) rotate(17.190259deg);
+	}
+	100% {
+		transform: translate(15.669406px, 26.091166px) rotate(8.303318deg);
+	}
+}
+/* 
 .portfolio-item .port-pic:after {
 	position: absolute;
 	content: '';
@@ -631,13 +654,13 @@ ol {
 	-webkit-transition: all 0.4s cubic-bezier(0.55, 0.09, 0.68, 0.53) 0s;
 	-o-transition: all 0.4s cubic-bezier(0.55, 0.09, 0.68, 0.53) 0s;
 	transition: all 0.4s cubic-bezier(0.55, 0.09, 0.68, 0.53) 0s;
-}
+} */
 
-.portfolio-item:hover .port-pic:after {
+/* .portfolio-item:hover .port-pic:after {
 	opacity: 0.8;
 	height: 100%;
 	top: 0;
-}
+} */
 
 /*---------------------
 	Contact section
