@@ -10,13 +10,13 @@ This is the documentation for the Freddie Kealy CV - PWA project.
 ### Outputs
 
 * **Website:** A visually appealing, one-page CV website. 
-* **Downloadable CV:** A PDF version of the user's CV can be downloaded from the website.
+* **Downloadable CV:** A PDF version of my CV can be downloaded from the website.
 * **Flappy Bee Game:** A fun, interactive Flappy Bird style game coded in HTML5/JavaScript.
 * **Offline Availability:** The PWA is designed to be accessible offline, providing a basic version of the CV website.
 
 ### Purpose
 
-The project aims to present Freddie Kealy's CV in a modern, engaging, and easily accessible format. The PWA functionality allows for offline access and the Flappy Bee game adds a fun element to the experience. This creates a unique and memorable online presence for Freddie Kealy. 
+The project aims to present my CV in a modern, engaging, and easily accessible format. The PWA functionality allows for offline access and the Flappy Bee game adds a fun element to the experience. This creates a unique and memorable online presence for Freddie Kealy. 
 
 ### Usage
 
