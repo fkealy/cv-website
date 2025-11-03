@@ -1,0 +1,121 @@
+---
+const projects = [
+  {
+    title: 'Yotpoint',
+    year: '2024 - Present',
+    description: 'A marketplace platform connecting superyachts with premium service providers. Built with Next.js, Vercel, and Tailwind CSS. Backend powered by Node.js, AWS Lambda, API Gateway, DynamoDB, and SES.',
+    link: 'https://yotpoint.com',
+    tags: ['Next.js', 'Tailwind CSS', 'AWS Lambda', 'DynamoDB', 'Node.js'],
+    featured: true,
+    color: 'from-blue-400 to-cyan-400'
+  },
+  {
+    title: 'Emotional Scripture',
+    year: '2024',
+    description: 'A tool to understand emotions through the wisdom of scripture. Find the rooted why behind your feelings with guided biblical insights.',
+    link: 'https://emotionalscripture.pages.dev/',
+    tags: ['JavaScript', 'Cloudflare Pages'],
+    featured: true,
+    color: 'from-purple-400 to-pink-400'
+  },
+  {
+    title: 'Latch Log',
+    year: '2024',
+    description: 'A logging app for new parents to track breastfeeding and nappy changes, bringing peace of mind during those early days.',
+    link: 'https://latchlog.pages.dev',
+    tags: ['JavaScript', 'Cloudflare Pages'],
+    featured: true,
+    color: 'from-green-400 to-emerald-400'
+  },
+  {
+    title: 'RE:PLAYLIST',
+    year: '2023',
+    description: 'A web app for making Spotify playlists using their open API. Full stack Node application using React, Redux, and hosted on AWS Elastic Beanstalk. Features Joy UI with dark mode theming.',
+    link: 'https://replaylist.fkealy.com/',
+    tags: ['React', 'Redux', 'Node.js', 'AWS', 'Spotify API'],
+    featured: false,
+    color: 'from-orange-300 to-yellow-300'
+  },
+  {
+    title: 'Villa La Mole',
+    year: '2020',
+    description: 'Designed and built a website for a holiday home. Hosted on AWS with serverless email functionality using Lambda and SES.',
+    link: 'https://www.villalamole.com',
+    tags: ['Bootstrap', 'AWS Lambda', 'AWS SES'],
+    featured: false,
+    color: 'from-red-300 to-orange-300'
+  }
+];
+---
+
+<section id="projects" class="py-20 px-4 bg-amber-50">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="inline-block bg-yellow-300 border-4 border-black px-6 py-3 rotate-2 bold-shadow-lg mb-6">
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 uppercase">
+          Projects
+        </h2>
+      </div>
+      <p class="text-xl font-semibold text-gray-800 max-w-2xl mx-auto">
+        Tools and platforms I've built across the web
+      </p>
+    </div>
+
+    <div class="space-y-8">
+      {projects.map((project, index) => (
+        <article class={`bg-gradient-to-r ${project.color} border-4 border-black p-8 bold-shadow-lg ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'} hover:rotate-0 transition-all`}>
+          <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+            <div>
+              <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2 uppercase">
+                {project.title}
+              </h3>
+              <p class="text-sm font-bold text-gray-900 uppercase tracking-widest">{project.year}</p>
+            </div>
+            {project.featured && (
+              <span class="inline-flex items-center px-4 py-2 bg-black text-yellow-300 font-bold uppercase tracking-wide text-sm border-2 border-yellow-300">
+                ⭐ Featured
+              </span>
+            )}
+          </div>
+
+          <div class="bg-white border-4 border-black p-6 mb-6 bold-shadow">
+            <p class="text-lg font-semibold text-gray-800 leading-relaxed">
+              {project.description}
+            </p>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mb-6">
+            {project.tags.map((tag) => (
+              <span class="px-3 py-2 bg-black text-white font-bold text-sm uppercase tracking-wide border-2 border-black">
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center px-6 py-3 bg-black text-white font-bold uppercase tracking-wide bold-shadow-hover group"
+          >
+            Visit Project →
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-16 text-center">
+      <a
+        href="https://github.com/fkealy"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold text-lg border-4 border-black bold-shadow-hover uppercase tracking-wide"
+      >
+        <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
+          <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+        </svg>
+        More on GitHub
+      </a>
+    </div>
+  </div>
+</section>

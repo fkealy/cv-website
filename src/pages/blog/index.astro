@@ -1,0 +1,65 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+
+const posts = (await getCollection('blog'))
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+---
+
+<BaseLayout title="Blog - Freddie Kealy" description="Thoughts on building products, technical challenges, and lessons learned">
+  <Nav />
+  <main class="pt-32 pb-20 px-4 min-h-screen bg-amber-50">
+    <div class="max-w-4xl mx-auto">
+      <div class="inline-block bg-yellow-300 border-4 border-black px-6 py-3 -rotate-2 bold-shadow-lg mb-6">
+        <h1 class="text-5xl md:text-6xl font-bold text-gray-900 uppercase">Blog</h1>
+      </div>
+
+      <div class="bg-white border-4 border-black p-6 bold-shadow mb-12">
+        <p class="text-xl font-semibold text-gray-800">
+          Thoughts on building products, technical challenges, and lessons learned
+        </p>
+      </div>
+
+      {posts.length === 0 ? (
+        <div class="bg-gradient-to-r from-orange-300 to-pink-300 border-4 border-black p-12 text-center bold-shadow-lg">
+          <p class="text-xl font-bold text-gray-900">
+            No posts yet. Check back soon!
+          </p>
+        </div>
+      ) : (
+        <div class="space-y-6">
+          {posts.map((post, index) => (
+            <article class={`bg-gradient-to-r from-white to-gray-50 border-4 border-black p-8 bold-shadow-hover ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'} hover:rotate-0`}>
+              <a href={`/blog/${post.slug}`} class="block group">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                  <h2 class="text-3xl md:text-4xl font-bold text-gray-900 group-hover:text-orange-500 transition-colors uppercase">
+                    {post.data.title}
+                  </h2>
+                  <div class="bg-yellow-300 border-2 border-black px-3 py-1 font-bold text-xs uppercase tracking-wide whitespace-nowrap">
+                    {post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </div>
+                </div>
+
+                <p class="text-lg font-semibold text-gray-700 mb-6 leading-relaxed">{post.data.description}</p>
+
+                {post.data.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-2">
+                    {post.data.tags.map((tag) => (
+                      <span class="px-3 py-1 bg-black text-white font-bold text-xs uppercase tracking-wide">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </a>
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
