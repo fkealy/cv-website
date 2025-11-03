@@ -7,7 +7,7 @@ interface Props {
 }
 
 const {
-  title = 'Freddie Kealy - Full Stack Developer & Builder',
+  title = 'Freddie Kealy',
   description = 'Full stack developer and builder based in the UK. Co-founder of Yotpoint, building tools and products across the web.'
 } = Astro.props;
 ---
@@ -16,7 +16,7 @@ const {
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" type="image/x-icon" href="/assets/FK.ico" />
+  <link rel="icon" type="image/svg+xml" href="/bee-favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="generator" content={Astro.generator} />
   <meta name="description" content={description} />
@@ -30,7 +30,7 @@ const {
 
   <title>{title}</title>
 </head>
-<body class="bg-amber-50 text-gray-900 antialiased">
+<body class="bg-white text-gray-900 antialiased">
   <slot />
 </body>
 </html>
