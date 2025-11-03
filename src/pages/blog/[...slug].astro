@@ -1,0 +1,169 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <Nav />
+  <main class="pt-32 pb-20 px-4 min-h-screen bg-white">
+    <article class="max-w-4xl mx-auto">
+      <header class="mb-12">
+        <a href="/blog" class="inline-flex items-center px-4 py-2 bg-primary-100 border-2 border-gray-800 font-bold uppercase text-sm tracking-wide hover:bg-primary-200 transition-colors mb-6">
+          ← Back
+        </a>
+
+        <div class="bg-primary-600 border-2 border-gray-800 p-8 mb-8">
+          <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight uppercase">
+            {post.data.title}
+          </h1>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 mb-6">
+          <div class="bg-white border-2 border-gray-300 px-4 py-2 font-bold text-sm uppercase tracking-wide">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {post.data.pubDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+          </div>
+          <div class="bg-gray-900 border-2 border-gray-900 px-4 py-2 text-white font-bold text-sm uppercase tracking-wide">
+            {post.data.author}
+          </div>
+        </div>
+
+        {post.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2">
+            {post.data.tags.map((tag) => (
+              <span class="px-3 py-2 bg-gray-100 border border-gray-300 font-bold text-sm uppercase tracking-wide text-gray-800">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <div class="bg-white border-2 border-gray-300 p-8 md:p-12">
+        <div class="prose prose-lg max-w-none">
+          <Content />
+        </div>
+      </div>
+    </article>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style is:global>
+  .prose {
+    color: rgb(31 41 55);
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  .prose h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: rgb(17 24 39);
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .prose h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(17 24 39);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .prose p {
+    margin-bottom: 1.5rem;
+    line-height: 1.75;
+    font-weight: 500;
+  }
+
+  .prose a {
+    color: rgb(71 85 105);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+    font-weight: 700;
+  }
+
+  .prose a:hover {
+    color: rgb(51 65 85);
+    background-color: rgb(241 245 249);
+  }
+
+  .prose ul,
+  .prose ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .prose li {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .prose code {
+    background-color: rgb(241 245 249);
+    padding: 0.25rem 0.5rem;
+    border: 1px solid rgb(203 213 225);
+    font-size: 0.875rem;
+    font-family: ui-monospace, monospace;
+    color: rgb(51 65 85);
+    font-weight: 600;
+  }
+
+  .prose pre {
+    background-color: rgb(30 41 59);
+    color: rgb(241 245 249);
+    padding: 1.5rem;
+    border: 2px solid rgb(71 85 105);
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    color: inherit;
+    font-weight: 400;
+    box-shadow: none;
+  }
+
+  .prose blockquote {
+    border-left: 4px solid rgb(71 85 105);
+    background-color: rgb(248 250 252);
+    padding: 1.5rem;
+    font-style: italic;
+    margin: 1.5rem 0;
+    color: rgb(51 65 85);
+    font-weight: 600;
+  }
+
+  .prose strong {
+    font-weight: 700;
+    color: rgb(17 24 39);
+  }
+</style>
