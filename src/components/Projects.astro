@@ -3,7 +3,8 @@ const projects = [
   {
     title: 'Yotpoint',
     year: '2024 - Present',
-    description: 'A marketplace platform connecting superyachts with premium service providers. Built with Next.js, Vercel, and Tailwind CSS. Backend powered by Node.js, AWS Lambda, API Gateway, DynamoDB, and SES.',
+    problem: 'Superyachts in places unknown struggled to find reliable premium service providers.',
+    solution: 'Building a directory of premium service providers with a focus on simple ux, for time-short service-providers to manage their contacts, respond to job requests and yacht crew to easily post jobs and recieve quotes.',
     link: 'https://yotpoint.com',
     tags: ['Next.js', 'Tailwind CSS', 'AWS Lambda', 'DynamoDB', 'Node.js'],
     featured: true,
@@ -12,7 +13,8 @@ const projects = [
   {
     title: 'Emotional Scripture',
     year: '2024',
-    description: 'A tool to understand emotions through the wisdom of scripture. Find the rooted why behind your feelings with guided biblical insights.',
+    problem: 'People look for guidance with emotions and don\'t have the benefit of scripture to lean on.',
+    solution: 'Built an engaging tool providing broad perspectives into scripture, with the aim of finding the rooted approach to emotions accross religions.',
     link: 'https://emotionalscripture.pages.dev/',
     tags: ['JavaScript', 'Cloudflare Pages'],
     featured: true,
@@ -21,7 +23,8 @@ const projects = [
   {
     title: 'Latch Log',
     year: '2024',
-    description: 'A logging app for new parents to track breastfeeding and nappy changes, bringing peace of mind during those early days.',
+    problem: 'New parents were overwhelmed tracking breastfeeding and nappy changes manually.',
+    solution: 'Built a logging app to bring peace of mind during those early days. A simple ui with fun, personalised theming options and offline availability as a PWA.',
     link: 'https://latchlog.pages.dev',
     tags: ['JavaScript', 'Cloudflare Pages'],
     featured: true,
@@ -30,7 +33,8 @@ const projects = [
   {
     title: 'RE:PLAYLIST',
     year: '2023',
-    description: 'A web app for making Spotify playlists using their open API. Full stack Node application using React, Redux, and hosted on AWS Elastic Beanstalk. Features Joy UI with dark mode theming.',
+    problem: 'A web app for making Spotify playlists using their open API.',
+    solution: 'Full stack Node application using React, Redux, and hosted on AWS Elastic Beanstalk. Features Joy UI with dark mode theming.',
     link: null,
     tags: ['React', 'Redux', 'Node.js', 'AWS', 'Spotify API'],
     featured: false,
@@ -40,9 +44,10 @@ const projects = [
   {
     title: 'Villa La Mole',
     year: '2020',
-    description: 'Designed and built a website for a holiday home. Hosted on AWS with serverless email functionality using Lambda and SES.',
+    problem: 'A holiday home owner was struggling to get bookings, with a site that didn\'t relfect the beauty of the property and was missing out on potential revenue.',
+    solution: 'Created a fast loading, responsive site with multiple languages and a high end design, that reflected the areas architecture and landscape. The site features a dashboard for the owner to manage bookings, availability and prices.',
     link: 'https://www.villalamole.com',
-    tags: ['Bootstrap', 'AWS Lambda', 'AWS SES'],
+    tags: ['Convex', 'React', 'Tailwind CSS','Vue.js'],
     featured: false,
     color: 'bg-red-50'
   }
@@ -80,9 +85,20 @@ const projects = [
           </div>
 
           <div class="bg-white border-2 border-gray-200 p-6 mb-6">
-            <p class="text-lg font-semibold text-gray-700 leading-relaxed">
-              {project.description}
-            </p>
+            <div class="space-y-4">
+              <div>
+                <p class="text-lg font-bold text-gray-900 mb-2">Problem:</p>
+                <p class="text-lg font-semibold text-gray-700 leading-relaxed">
+                  {project.problem}
+                </p>
+              </div>
+              <div>
+                <p class="text-lg font-bold text-gray-900 mb-2">Solution:</p>
+                <p class="text-lg font-semibold text-gray-700 leading-relaxed">
+                  {project.solution}
+                </p>
+              </div>
+            </div>
           </div>
 
           <div class="flex flex-wrap gap-2 mb-6">
