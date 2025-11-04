@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 import Projects from '../components/Projects.astro';
 import Experience from '../components/Experience.astro';
@@ -8,13 +7,15 @@ import Footer from '../components/Footer.astro';
 ---
 
 <BaseLayout>
-  <Nav />
-  <main class="pt-16">
-    <Hero />
-    <Projects />
-    <Experience />
-  </main>
-  <Footer />
+  <div transition:name="home-content">
+    <main class="pt-16 pb-16">
+      <Hero />
+      <Projects />
+      <Experience />
+    </main>
+  </div>
+    <Footer />
+
 </BaseLayout>
 
 <style>

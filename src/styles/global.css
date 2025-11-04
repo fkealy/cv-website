@@ -18,3 +18,109 @@
 * {
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
+
+/* View Transitions - specific page transitions */
+
+/* Unified sheet-like transitions */
+/* Home to Blog: home slides out left, blog slides in from right */
+::view-transition-old(home-content) {
+  animation: slideOutLeftSheet 0.6s ease-in-out forwards;
+}
+
+::view-transition-new(blog-content) {
+  animation: var(--blog-slide-in, slideInFromRightSheet 0.6s ease-in-out forwards);
+}
+
+/* Blog transitions - direction determined by destination page */
+::view-transition-old(blog-content) {
+  animation: var(--blog-slide-out, slideOutRightSheet 0.6s ease-in-out forwards);
+}
+
+::view-transition-new(home-content) {
+  animation: slideInFromLeftSheet 0.6s ease-in-out forwards;
+}
+
+::view-transition-new(blog-post-content) {
+  animation: slideInFromRightSheet 0.6s ease-in-out backwards;
+}
+
+/* Blog post to Blog index: post slides out right, blog slides in from left */
+::view-transition-old(blog-post-content) {
+  animation: slideOutRightSheet 0.6s ease-in-out forwards;
+}
+
+
+
+footer {
+  /* Prevent view transition animations */
+  view-transition-name: none;
+  /* CSS containment to isolate from layout changes during transitions */
+  contain: layout paint;
+}
+
+/* Nav and footer positioning is handled by their default styles */
+
+/* Additional navigation scenarios covered by existing rules:
+   - Blog index ↔ Blog posts (blog-content ↔ blog-post-content)
+   - Hash navigation (#projects) - same page, no transition needed
+   - External links (Flappy Bee) - different route, handled by browser */
+
+
+/* No default transitions for root - only page-content should animate */
+
+/* Directional slide animations */
+
+/* Sheet-like slide animations */
+@keyframes slideOutLeftSheet {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-100vw);
+  }
+}
+
+@keyframes slideInFromRightSheet {
+  from {
+    opacity: 1;
+    transform: translateX(100vw);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRightSheet {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(100vw);
+  }
+}
+
+@keyframes slideInFromLeftSheet {
+  from {
+    opacity: 1;
+    transform: translateX(-100vw);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* Default slide animation for transition:animate="slide" */
+::view-transition-old(root) {
+  animation: slideOutLeft 0.4s ease-in-out forwards;
+}
+
+::view-transition-new(root) {
+  animation: slideInFromRight 0.4s ease-in-out forwards;
+}
