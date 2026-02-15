@@ -27,26 +27,22 @@
   animation: slideOutLeftSheet 0.6s ease-in-out forwards;
 }
 
-::view-transition-new(blog-content) {
-  animation: var(--blog-slide-in, slideInFromRightSheet 0.6s ease-in-out forwards);
-}
-
-/* Blog transitions - old depends on navigation direction */
-::view-transition-old(blog-content) {
-  animation: var(--blog-old-animation, slideOutRightSheet 0.6s ease-in-out forwards);
-}
-
 ::view-transition-new(home-content) {
   animation: slideInFromLeftSheet 0.6s ease-in-out forwards;
 }
 
-::view-transition-new(blog-post-content) {
-  animation: slideInFromRightSheet 0.6s ease-in-out backwards;
+/* Blog content - direction based on CSS custom properties */
+:root {
+  --blog-new-animation: slideInFromRightSheet;
+  --blog-old-animation: slideOutRightSheet;
 }
 
-/* Blog post to Blog index: post slides out right, blog slides in from left */
-::view-transition-old(blog-post-content) {
-  animation: slideOutRightSheet 0.6s ease-in-out forwards;
+::view-transition-new(blog-content) {
+  animation: var(--blog-new-animation) 0.6s ease-in-out forwards;
+}
+
+::view-transition-old(blog-content) {
+  animation: var(--blog-old-animation) 0.6s ease-in-out forwards;
 }
 
 
@@ -116,11 +112,4 @@ footer {
 }
 
 
-/* Default slide animation for transition:animate="slide" */
-::view-transition-old(root) {
-  animation: slideOutLeft 0.4s ease-in-out forwards;
-}
-
-::view-transition-new(root) {
-  animation: slideInFromRight 0.4s ease-in-out forwards;
-}
+/* No root animations - each page defines its own transition names */

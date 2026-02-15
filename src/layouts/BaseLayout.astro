@@ -40,42 +40,5 @@ const {
   <Nav />
   <slot />
 
-  <script>
-    // Global transition logic for blog pages
-    document.addEventListener('astro:before-preparation', (event) => {
-      const from = event.from.pathname;
-      const to = event.to.pathname;
-
-      // If navigating FROM blog index, set appropriate old animation based on destination
-      if (from === '/blog') {
-        // If navigating to home, slide out right (home comes from left)
-        if (to === '/' || to === '/#projects' || to === '/#experience') {
-          document.documentElement.style.setProperty('--blog-old-animation', 'slideOutRightSheet 0.6s ease-in-out forwards');
-        }
-        // If navigating to a blog post, slide out left (post comes from right)
-        else if (to.startsWith('/blog/') && to !== '/blog') {
-          document.documentElement.style.setProperty('--blog-old-animation', 'slideOutLeftSheet 0.6s ease-in-out forwards');
-        }
-      }
-
-      // If navigating TO blog index, set appropriate new animation based on source
-      if (to === '/blog') {
-        // If coming from home, slide in from right (home slides out left)
-        if (from === '/' || from.startsWith('/#')) {
-          document.documentElement.style.setProperty('--blog-slide-in', 'slideInFromRightSheet 0.6s ease-in-out forwards');
-        }
-        // If coming from blog post, slide in from left (post slides out right)
-        else if (from.startsWith('/blog/') && from !== '/blog') {
-          document.documentElement.style.setProperty('--blog-slide-in', 'slideInFromLeftSheet 0.6s ease-in-out forwards');
-        }
-      }
-    });
-
-    // Reset blog animations on page load
-    document.addEventListener('astro:page-load', () => {
-      document.documentElement.style.removeProperty('--blog-old-animation');
-      document.documentElement.style.removeProperty('--blog-slide-in');
-    });
-  </script>
 </body>
 </html>

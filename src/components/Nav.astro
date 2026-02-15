@@ -76,76 +76,40 @@
   // Re-set up handlers after each Astro navigation
   document.addEventListener('astro:page-load', setupNavigationHandlers);
 
-  // Handle dynamic blog transitions
-  function setupBlogTransitions() {
-    // Set CSS custom property for blog slide direction based on navigation
-    document.addEventListener('astro:before-swap', (event) => {
-      const fromPath = event.from.pathname;
-      const toPath = event.to.pathname;
+  // Handle dynamic blog transitions using CSS custom properties
+  // Set CSS variables on CURRENT document before swap happens
+  document.addEventListener('astro:before-swap', (event) => {
+    // Normalize paths: remove trailing slashes
+    const fromPath = event.from.pathname.replace(/\/$/, '');
+    const toPath = event.to.pathname.replace(/\/$/, '');
 
+    // Set CSS custom properties on the root element
+    // These control the animation directions for blog transitions
 
-      // If navigating FROM the blog index
-      if (fromPath === '/blog') {
-        if (toPath === '/' || toPath.startsWith('/#')) {
-          const style = document.createElement('style');
-          style.id = 'blog-transition-override';
-          style.textContent = `
-            ::view-transition-old(blog-content) {
-              animation: slideOutRightSheet 0.6s ease-in-out forwards !important;
-            }
-          `;
-          document.head.appendChild(style);
-        } else if (toPath.startsWith('/blog/') && toPath !== '/blog') {
-          // Going to a blog post - slide left (out)
-          const style = document.createElement('style');
-          style.id = 'blog-transition-override';
-          style.textContent = `
-            ::view-transition-old(blog-content) {
-              animation: slideOutLeftSheet 0.6s ease-in-out forwards !important;
-            }
-          `;
-          document.head.appendChild(style);
-        }
+    // Reset to defaults first
+    document.documentElement.style.setProperty('--blog-new-animation', 'slideInFromRightSheet');
+    document.documentElement.style.setProperty('--blog-old-animation', 'slideOutRightSheet');
+
+    // If navigating TO the blog index
+    if (toPath === '/blog') {
+      if (fromPath === '' || fromPath === '/' || fromPath.startsWith('/#')) {
+        // Home → Blog: blog slides in from right (default is correct)
+        console.log('📥 Home → Blog: Blog slides in from RIGHT');
       }
+    }
 
-      // If navigating TO the blog index
-      if (toPath === '/blog') {
-        if (fromPath === '/' || fromPath.startsWith('/#')) {
-          // Coming from home - slide in from right
-          console.log('Blog: coming from home, slide in from RIGHT');
-          const style = document.createElement('style');
-          style.id = 'blog-transition-override-in';
-          style.textContent = `
-            ::view-transition-new(blog-content) {
-              animation: slideInFromRightSheet 0.6s ease-in-out forwards !important;
-            }
-          `;
-          document.head.appendChild(style);
-        } else if (fromPath.startsWith('/blog/') && fromPath !== '/blog') {
-          // Coming from a blog post - slide in from left
-          console.log('Blog: coming from post, slide in from LEFT');
-          const style = document.createElement('style');
-          style.id = 'blog-transition-override-in';
-          style.textContent = `
-            ::view-transition-new(blog-content) {
-              animation: slideInFromLeftSheet 0.6s ease-in-out forwards !important;
-            }
-          `;
-          document.head.appendChild(style);
-        }
+    // If navigating FROM the blog index
+    if (fromPath === '/blog') {
+      if (toPath === '' || toPath === '/' || toPath.startsWith('/#')) {
+        // Blog → Home: blog slides out right (default is correct)
+        console.log('📤 Blog → Home: Blog slides out RIGHT');
       }
-    });
+    }
+  });
 
-    // Clean up injected styles after transition
-    document.addEventListener('astro:page-load', () => {
-      const overrideStyle = document.getElementById('blog-transition-override');
-      const overrideStyleIn = document.getElementById('blog-transition-override-in');
-      if (overrideStyle) overrideStyle.remove();
-      if (overrideStyleIn) overrideStyleIn.remove();
-    });
-  }
-
-  // Set up blog transitions
-  document.addEventListener('DOMContentLoaded', setupBlogTransitions);
-  document.addEventListener('astro:page-load', setupBlogTransitions);
+  // Reset CSS variables after transition completes
+  document.addEventListener('astro:page-load', () => {
+    document.documentElement.style.removeProperty('--blog-new-animation');
+    document.documentElement.style.removeProperty('--blog-old-animation');
+  });
 </script>

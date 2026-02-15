@@ -1,35 +1,34 @@
 ---
-title: "The SaaS Commoditization Crisis: Why Brand Is Your Only Moat"
-description: "When anyone can clone your SaaS in a weekend, features aren't a moat anymore. Here's what I learned about brand after seeing Yotpoint become just another tool in an Instagram feed."
+title: "Building features isn't a moat anymore"
+description: "When everyone can clone your product in a weekend, your brand narrative is the only thing that matters."
 pubDate: 2026-02-15
-tags: ["saas", "brand", "yotpoint", "ai"]
+tags: ["saas", "brand", "yotpoint"]
 ---
 
-The barrier to building SaaS just hit zero.
+I saw the same Instagram ad ten times in one day. "Scheduling and invoicing for contractors." Different logos, identical features.
 
-[AI coding assistants deliver 20-55% productivity gains](https://www.bettercloud.com/monitor/saas-industry/) according to a 2024 GitHub study. No-code platforms let anyone ship without writing code. A production-ready SaaS that [used to cost $35K-400K now costs $5K-8.5K](https://www.raftlabs.com/blog/saas-app-development-cost/) with AI assistance.
+What used to take months to build now takes a weekend and a Claude Code subscription. A 2024 GitHub study found AI assistants speed up developers by 20-55%. Anyone can build your features now.
 
-Here's what that means: your competitor can clone your product in a weekend.
+## Brand is what's left
 
-Horizontal SaaS is saturated. Dozens of viable alternatives exist in every category, most with generous free tiers. Switching costs are measured in days, not months. And your beautiful UI/UX? AI agents bypass it entirely. They consume raw APIs and data, not pretty dashboards.
+When your competitor can clone your product that fast, features stop mattering. What matters is who you're building for and whether they trust you.
 
-I saw this building [Yotpoint](https://yotpoint.com). When we added scheduling tools, Instagram became a graveyard of identical ads: "scheduling, invoicing, payments for contractors." Same features, different logos. Everyone burning cash on paid ads to differentiate the indistinguishable.
+Building [Yotpoint](https://yotpoint.com), we learned this the hard way. We could build scheduling tools for trades, but so could everyone else. The Instagram ad wall proved that.
 
-The wake-up call: "tools for trades" isn't even a niche. It's a huge market that attracted hundreds of competitors. The real niches live inside. HVAC scheduling with inventory tracking. Invoicing for solo electricians.
+Our brand narrative became clearer when we focused on who we serve: yacht management companies coordinating sensitive trade networks. Security-first platform they can trust. That's a different story than "scheduling and invoicing."
 
-A January 2026 report from [ThinkingTechStocks on SaaS market dynamics](https://www.thinkingtechstocks.com/p/the-great-software-correction-of) put it bluntly: "In 2026, being 'known' isn't enough; you must be trusted." Brand, community, and ecosystem are what's left when product features become table stakes. When products commoditize, trust is everything.
+## Getting your narrative out there
 
-The question isn't "how fast can we ship features?" It's "who do we serve, and why do they trust us?"
+You can't compete on features when features are free. You compete on understanding a specific problem for specific people.
 
-Because when anyone can build your product, the only thing that matters is why someone would choose yours.
+Yacht management companies care about security and reliability. That's our narrative. Not "we have more features" but "we understand your risk."
 
-What's your answer?
+The question isn't what you build. It's who you serve and why they'd trust you over twenty identical alternatives.
+
+Your brand narrative is how you answer that. Or so I think anyway. Make it specific. Make it matter to someone real.
 
 ---
 
-**Sources:**
-- [AI and the SaaS industry in 2026](https://www.bettercloud.com/monitor/saas-industry/)
+**Further reading:**
 - [The Great Software Correction of 2026](https://www.thinkingtechstocks.com/p/the-great-software-correction-of)
 - [How SaaS Companies Can Compete Under Commoditization](https://openviewpartners.com/blog/how-saas-companies-can-compete-under-commoditization/)
-- [SaaS App Development Cost in 2026](https://www.raftlabs.com/blog/saas-app-development-cost/)
-- [6 Strategic Moats That Make B2B SaaS Products Hard to Copy](https://www.tejavep.com/p/6-strategic-moats-that-make-b2b-saas)
