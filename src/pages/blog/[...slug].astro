@@ -18,7 +18,7 @@ const { Content } = await post.render();
 
 <BaseLayout title={post.data.title} description={post.data.description}>
   <Nav />
-  <div transition:name="blog-post-content">
+  <div transition:name="blog-post-content" transition:persist>
   <main class="pt-32 pb-20 px-4 min-h-screen">
     <article class="max-w-4xl mx-auto">
       <header class="mb-12">

@@ -31,9 +31,9 @@
   animation: var(--blog-slide-in, slideInFromRightSheet 0.6s ease-in-out forwards);
 }
 
-/* Blog transitions - direction determined by destination page */
+/* Blog transitions - old depends on navigation direction */
 ::view-transition-old(blog-content) {
-  animation: var(--blog-slide-out, slideOutRightSheet 0.6s ease-in-out forwards);
+  animation: var(--blog-old-animation, slideOutRightSheet 0.6s ease-in-out forwards);
 }
 
 ::view-transition-new(home-content) {
