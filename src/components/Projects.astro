@@ -67,62 +67,98 @@ const projects = [
       </p>
     </div>
 
-    <div class="space-y-8">
-      {projects.map((project) => (
-        <article class={`${project.color} border-2 border-gray-300 p-8 hover:border-gray-800 transition-colors duration-300`}>
-          <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-            <div>
-              <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2 uppercase">
-                {project.title}
-              </h3>
-              <p class="text-sm font-bold text-gray-600 uppercase tracking-widest">{project.year}</p>
-            </div>
-            {project.featured && (
-              <span class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-bold uppercase tracking-wide text-sm">
-                Featured
-              </span>
-            )}
-          </div>
-
-          <div class="bg-white border-2 border-gray-200 p-6 mb-6">
-            <div class="space-y-4">
-              <div>
-                <p class="text-lg font-bold text-gray-900 mb-2">Problem:</p>
-                <p class="text-lg font-semibold text-gray-700 leading-relaxed">
-                  {project.problem}
-                </p>
+    <div class="space-y-4">
+      {projects.map((project, index) => (
+        <article class={`${project.color} border-2 border-gray-300 transition-all duration-300 hover:border-gray-800`}>
+          <button
+            class="w-full text-left p-6 flex items-center justify-between gap-4"
+            data-project-toggle={index}
+            aria-expanded="false"
+            aria-controls={`project-content-${index}`}
+          >
+            <div class="flex-1 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div class="flex items-center gap-4 flex-wrap">
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase">
+                  {project.title}
+                </h3>
+                <p class="text-sm font-bold text-gray-600 uppercase tracking-widest">{project.year}</p>
+                {project.featured && (
+                  <span class="inline-flex items-center px-3 py-1 bg-gray-900 text-white font-bold uppercase tracking-wide text-xs">
+                    Featured
+                  </span>
+                )}
               </div>
-              <div>
-                <p class="text-lg font-bold text-gray-900 mb-2">Solution:</p>
-                <p class="text-lg font-semibold text-gray-700 leading-relaxed">
-                  {project.solution}
-                </p>
+              <div class="flex flex-wrap gap-2">
+                {project.tags.slice(0, 3).map((tag) => (
+                  <span class="px-2 py-1 bg-gray-100 text-gray-800 font-bold text-xs uppercase tracking-wide border border-gray-300">
+                    {tag}
+                  </span>
+                ))}
+                {project.tags.length > 3 && (
+                  <span class="px-2 py-1 bg-gray-100 text-gray-600 font-bold text-xs uppercase">
+                    +{project.tags.length - 3}
+                  </span>
+                )}
               </div>
             </div>
-          </div>
-
-          <div class="flex flex-wrap gap-2 mb-6">
-            {project.tags.map((tag) => (
-              <span class="px-3 py-2 bg-gray-100 text-gray-800 font-bold text-sm uppercase tracking-wide border border-gray-300">
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          {project.link ? (
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-bold uppercase tracking-wide hover:bg-gray-800 transition-colors duration-300 group"
+            <svg
+              class="w-6 h-6 text-gray-900 transition-transform duration-300 flex-shrink-0"
+              data-chevron={index}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              Visit Project →
-            </a>
-          ) : (
-            <div class="inline-flex items-center px-6 py-3 bg-gray-500 text-white font-bold uppercase tracking-wide">
-              Decommissioned
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <div
+            id={`project-content-${index}`}
+            class="project-content overflow-hidden transition-all duration-300 max-h-0"
+            data-project-content={index}
+          >
+            <div class="px-6 pb-6 pt-2">
+              <div class="bg-white border-2 border-gray-200 p-6 mb-6">
+                <div class="space-y-4">
+                  <div>
+                    <p class="text-lg font-bold text-gray-900 mb-2">Problem:</p>
+                    <p class="text-lg font-semibold text-gray-700 leading-relaxed">
+                      {project.problem}
+                    </p>
+                  </div>
+                  <div>
+                    <p class="text-lg font-bold text-gray-900 mb-2">Solution:</p>
+                    <p class="text-lg font-semibold text-gray-700 leading-relaxed">
+                      {project.solution}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-6">
+                {project.tags.map((tag) => (
+                  <span class="px-3 py-2 bg-gray-100 text-gray-800 font-bold text-sm uppercase tracking-wide border border-gray-300">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {project.link ? (
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-bold uppercase tracking-wide hover:bg-gray-800 transition-colors duration-300"
+                >
+                  Visit Project →
+                </a>
+              ) : (
+                <div class="inline-flex items-center px-6 py-3 bg-gray-500 text-white font-bold uppercase tracking-wide">
+                  Decommissioned
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </article>
       ))}
     </div>
@@ -142,3 +178,47 @@ const projects = [
     </div>
   </div>
 </section>
+
+<script is:inline>
+  (function() {
+    function setupProjectAccordions() {
+      const toggleButtons = document.querySelectorAll('[data-project-toggle]');
+
+      toggleButtons.forEach((button) => {
+        // Remove any existing listeners by cloning the button
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+
+        newButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          const index = newButton.getAttribute('data-project-toggle');
+          const content = document.querySelector(`[data-project-content="${index}"]`);
+          const chevron = document.querySelector(`[data-chevron="${index}"]`);
+          const isExpanded = newButton.getAttribute('aria-expanded') === 'true';
+
+          if (isExpanded) {
+            // Collapse
+            newButton.setAttribute('aria-expanded', 'false');
+            content.style.maxHeight = '0';
+            chevron.style.transform = 'rotate(0deg)';
+          } else {
+            // Expand
+            newButton.setAttribute('aria-expanded', 'true');
+            content.style.maxHeight = content.scrollHeight + 'px';
+            chevron.style.transform = 'rotate(180deg)';
+          }
+        });
+      });
+    }
+
+    // Initialize immediately
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupProjectAccordions);
+    } else {
+      setupProjectAccordions();
+    }
+
+    // Re-initialize after view transitions
+    document.addEventListener('astro:page-load', setupProjectAccordions);
+  })();
+</script>
