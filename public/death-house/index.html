@@ -37,6 +37,18 @@
   #stamfill { background:linear-gradient(180deg,#3fae62,#1d6b38); }
   #timer { position:absolute; top:max(14px, env(safe-area-inset-top)); left:50%; transform:translateX(-50%);
     font-size:clamp(14px,2.6vw,22px); letter-spacing:3px; color:#e8dfc8; text-shadow:0 1px 6px rgba(0,0,0,.9); }
+  #pausebtn { position:absolute; top:max(12px, env(safe-area-inset-top)); left:calc(50% + 78px);
+    width:34px; height:34px; border:1px solid #4a3f3a; background:rgba(20,16,16,.7); color:#cfc8b8;
+    display:flex; align-items:center; justify-content:center; font-size:13px; letter-spacing:1px;
+    cursor:pointer; pointer-events:auto; }
+  #coopstatus { font-size:11px; letter-spacing:2px; color:#7fa8ff; margin-top:6px; }
+  #whisper { position:absolute; bottom:30%; left:0; right:0; text-align:center; font-style:italic;
+    font-size:clamp(12px,2.2vw,16px); letter-spacing:2px; color:#8d9bb5; opacity:0;
+    transition:opacity 1.4s ease; text-shadow:0 1px 6px rgba(0,0,0,.85); padding:0 10vw; }
+  #whisper.show { opacity:.9; }
+  #pausemenu { display:none; z-index:25; }
+  #invitelink { margin-top:14px; color:#bfeeff; font-size:clamp(11px,2vw,14px); letter-spacing:1px;
+    word-break:break-all; max-width:min(520px,86vw); }
   #roominfo { position:absolute; top:max(14px, env(safe-area-inset-top)); right:16px; text-align:right; }
   #roomnum { font-size:20px; letter-spacing:3px; color:#e8dfc8; text-shadow:0 0 8px rgba(200,40,30,.6); }
   #weaponname { font-size:12px; letter-spacing:2px; color:#b8a25c; margin-top:4px; }
@@ -83,9 +95,9 @@
   #truescene { display:none; z-index:40;
     background:linear-gradient(180deg,#2b1f3a 0%,#6e3a55 45%,#c97b4a 78%,#e8b06a 100%); }
   #truescene svg { width:min(80vw,560px); height:auto; }
-  #byemsg, #byeend { opacity:0; transition:opacity 2.5s ease; margin-top:26px; letter-spacing:3px;
+  #byepre, #byemsg, #byeend { opacity:0; transition:opacity 2.5s ease; margin-top:26px; letter-spacing:3px;
     color:#fff3df; font-size:clamp(13px,2.6vw,19px); text-shadow:0 1px 8px rgba(0,0,0,.4); }
-  #byemsg.show, #byeend.show { opacity:1; }
+  #byepre.show, #byemsg.show, #byeend.show { opacity:1; }
 
   /* ---------- speedrun leaderboard ---------- */
   #results { display:none; z-index:35; }
@@ -134,11 +146,14 @@
     <div class="bar"><div class="fill" id="stamfill"></div></div>
   </div>
   <div id="timer">00:00.0</div>
+  <div id="pausebtn">II</div>
   <div id="roominfo">
     <div id="roomnum">ROOM 1</div>
     <div id="weaponname">BARE FISTS</div>
     <div id="soulcount">&#9760; 1</div>
+    <div id="coopstatus"></div>
   </div>
+  <div id="whisper"></div>
   <div id="banner"><div class="big" id="bannerbig"></div><div class="small" id="bannersmall"></div></div>
   <div id="streak"></div>
   <div id="toast"></div>
@@ -180,6 +195,24 @@
 
 <div id="prompt"></div>
 
+<div class="screen" id="pausemenu">
+  <h1 style="font-size:clamp(22px,5vw,40px)">HELD BREATH</h1>
+  <div class="sub">THE HOUSE WAITS. THE CLOCK DOES NOT.</div>
+  <div class="endbtns" style="flex-direction:column; align-items:center;">
+    <button class="endbtn" id="btnresume">RESUME</button>
+    <button class="endbtn" id="btninvite">INVITE A SECOND SOUL</button>
+    <button class="endbtn" id="btnrestart">RESTART THE RUN</button>
+    <button class="endbtn" id="btnquit">RETURN TO TITLE</button>
+  </div>
+  <div id="invitebox" style="display:none">
+    <div class="sub" style="margin-top:26px">ANOTHER LOST SOUL WAKES IN THEIR OWN HOUSE, VISIBLE IN YOURS.<br>
+      SHARE THIS LINK:</div>
+    <div id="invitelink"></div>
+    <button class="endbtn" id="btncopy" style="margin-top:12px">COPY LINK</button>
+    <div class="sub" id="coopstate" style="margin-top:10px"></div>
+  </div>
+</div>
+
 <div class="screen" id="endchoice">
   <h1 style="font-size:clamp(22px,5vw,40px)">THE THRESHOLD</h1>
   <div class="sub">THE EXIT SHINES AHEAD. THE LITTLE ONE STOPS AT THE EDGE OF THE LIGHT.<br>
@@ -208,6 +241,7 @@
     <path d="M284 259 L281 249 L289 256 M299 257 L303 248 L294 255" fill="#241420"/>
     <path d="M286 268 q6 5 12 0" stroke="#e8b06a" stroke-width="2" fill="none" stroke-linecap="round"/>
   </svg>
+  <div id="byepre">YOU REMEMBER THE TREE NOW. YOU REMEMBER WHO WAITED BENEATH IT.</div>
   <div id="byemsg">THANK YOU FOR CARRYING ME THIS FAR.</div>
   <div id="byeend">THE END &mdash; TAP TO RETURN</div>
 </div>
@@ -245,6 +279,12 @@ const WALL_MSGS = {
   7:'FIND THE LITTLE ONE',
   9:'IT STAYED BECAUSE YOU COULD NOT LET GO',
 };
+const DEATH_LINES = [
+  'THE HOUSE KEEPS WHAT IT TAKES.',
+  'AGAIN. THE STONES REMEMBER YOU.',
+  'GRIEF IS PATIENT. SO IS THE HOUSE.',
+  'EVERY SOUL FALLS BEFORE IT LEARNS TO LET GO.',
+];
 const FINAL_ROOM = 10;
 const CONVEX_URL = 'https://vivid-dalmatian-615.convex.cloud';
 
@@ -265,6 +305,135 @@ function fmtTime(ms) {
 function escapeHtml(s) {
   return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+/* ============================================================ SOUL-LINK (live co-op presence) */
+const coop = { active:false, connecting:false, code:null, playerId:null, client:null, unsub:null,
+  models:new Map(), latest:new Map(), lastSend:0 };
+const JOIN_CODE = new URLSearchParams(location.search).get('join');
+
+function inviteUrl() {
+  return location.origin + location.pathname + '?join=' + coop.code;
+}
+function setCoopState(msg) { $('coopstate').textContent = msg; }
+function updateInviteBox() {
+  $('invitelink').textContent = coop.code ? inviteUrl() : 'OPENING THE LINK…';
+}
+function updateCoopStatus() {
+  $('coopstatus').textContent = coop.active
+    ? `✦ SOUL-LINK ${coop.code}${coop.models.size ? ' · ' + coop.models.size + ' BESIDE YOU' : ' · WAITING'}`
+    : '';
+}
+async function coopConnect(code) {
+  if (coop.active || coop.connecting) { updateInviteBox(); return; }
+  coop.connecting = true;
+  setCoopState(code ? 'REACHING ACROSS…' : 'OPENING THE LINK…');
+  try {
+    const { ConvexClient } = await import('https://esm.sh/convex@1.39.1/browser');
+    coop.client = new ConvexClient(CONVEX_URL);
+    const name = (localStorage.getItem('dh_name') || 'SOUL').toUpperCase();
+    const res = await coop.client.mutation('presence:join', { code: code || undefined, name });
+    coop.code = res.code; coop.playerId = res.playerId; coop.active = true;
+    coop.unsub = coop.client.onUpdate('presence:others',
+      { code: coop.code, me: coop.playerId }, handleOthers);
+    addEventListener('pagehide', () => {
+      try { coop.client.mutation('presence:leave', { playerId: coop.playerId }); } catch {}
+    });
+    setCoopState('THE LINK IS OPEN');
+    updateInviteBox(); updateCoopStatus();
+    showToast(code ? 'YOU ARE NOT ALONE IN THE HOUSE' : 'THE LINK IS OPEN. SHARE IT.');
+    sfx.chirp();
+  } catch {
+    setCoopState('THE LINK FAILED. TRY AGAIN.');
+  }
+  coop.connecting = false;
+}
+const partnerBoneMat = new THREE.MeshStandardMaterial({ color:0xaecbff, roughness:0.55,
+  emissive:0x16294f, emissiveIntensity:0.8, transparent:true, opacity:0.92 });
+const partnerJointMat = new THREE.MeshStandardMaterial({ color:0x9fbef0, roughness:0.6,
+  emissive:0x16294f, emissiveIntensity:0.8, transparent:true, opacity:0.92 });
+function makePartnerModel(name) {
+  const { group, parts } = makeStickMan();
+  group.traverse(o => {
+    if (o.isMesh && o.material === boneMat) o.material = partnerBoneMat;
+    else if (o.isMesh && o.material === jointMat) o.material = partnerJointMat;
+  });
+  const li = new THREE.PointLight(0x7fa8ff, 5, 6, 1.8); li.position.y = 1.6; group.add(li);
+  const c = document.createElement('canvas'); c.width = 256; c.height = 48;
+  const g2 = c.getContext('2d');
+  g2.font = 'bold 28px Courier New'; g2.textAlign = 'center'; g2.textBaseline = 'middle';
+  g2.fillStyle = 'rgba(174,203,255,0.95)';
+  g2.fillText(name.slice(0, 12), 128, 24);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const plate = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.28),
+    new THREE.MeshBasicMaterial({ map:tex, transparent:true, depthTest:false }));
+  plate.position.y = 2.25; plate.renderOrder = 998;
+  group.add(plate);
+  group.visible = false;
+  scene.add(group);
+  return { group, parts, plate, facing: Math.PI };
+}
+function handleOthers(rows) {
+  const seen = new Set();
+  for (const r of rows) {
+    seen.add(r.id);
+    coop.latest.set(r.id, r);
+    if (!coop.models.has(r.id)) coop.models.set(r.id, makePartnerModel(r.name));
+  }
+  for (const [id, m] of coop.models) {
+    if (!seen.has(id)) { scene.remove(m.group); coop.models.delete(id); coop.latest.delete(id); }
+  }
+  updateCoopStatus();
+}
+function updatePartners(dt) {
+  for (const [id, m] of coop.models) {
+    const tr = coop.latest.get(id);
+    if (!tr) continue;
+    const visible = tr.room === room && gameState !== 'title';
+    m.group.visible = visible;
+    if (!visible) continue;
+    m.group.position.x += (tr.x - m.group.position.x) * Math.min(1, 10*dt);
+    m.group.position.z += (tr.z - m.group.position.z) * Math.min(1, 10*dt);
+    m.facing = lerpAngle(m.facing, tr.facing, Math.min(1, 10*dt));
+    m.group.rotation.y = m.facing;
+    const moving = Math.hypot(tr.x - m.group.position.x, tr.z - m.group.position.z) > 0.12;
+    const t2 = performance.now()/1000;
+    const P = m.parts;
+    const wob = moving ? Math.sin(t2*10.5) : 0;
+    P.legL.root.rotation.x = moving ?  wob*0.6 : 0.2;
+    P.legR.root.rotation.x = moving ? -wob*0.6 : -0.25;
+    P.legL.joint.rotation.x = moving ? Math.max(0,-wob)*0.9 : 0.3;
+    P.legR.joint.rotation.x = moving ? Math.max(0, wob)*0.9 : 0.45;
+    m.group.rotation.x = 0;
+    P.armR.root.rotation.z = -0.15; P.armL.root.rotation.z = 0.15;
+    if (tr.anim === 'attack') {
+      P.armR.root.rotation.x = -1.6; P.armR.joint.rotation.x = -0.1;
+      P.armL.root.rotation.x = -0.4; P.armL.joint.rotation.x = -1.8;
+    } else if (tr.anim === 'parry') {
+      P.armR.root.rotation.x = P.armL.root.rotation.x = -1.5;
+      P.armR.joint.rotation.x = P.armL.joint.rotation.x = -1.3;
+      P.armR.root.rotation.z = -0.5; P.armL.root.rotation.z = 0.5;
+    } else if (tr.anim === 'dodge') {
+      m.group.rotation.x = (t2*14) % (Math.PI*2);
+      P.armR.joint.rotation.x = P.armL.joint.rotation.x = -2.2;
+    } else if (tr.anim === 'dead') {
+      m.group.rotation.x = Math.PI/2;
+    } else {
+      P.armR.root.rotation.x = -0.35; P.armR.joint.rotation.x = -1.7;
+      P.armL.root.rotation.x = -0.55; P.armL.joint.rotation.x = -1.5;
+    }
+    m.group.position.y = moving ? Math.abs(Math.sin(t2*10.5))*0.05 : 0;
+    m.group.getWorldQuaternion(_q).invert();
+    m.plate.quaternion.copy(_q).multiply(camera.quaternion);
+  }
+}
+function nearestPartnerPos() {
+  for (const [id, m] of coop.models) {
+    const tr = coop.latest.get(id);
+    if (tr && tr.room === room &&
+        Math.hypot(tr.x - player.pos.x, tr.z - player.pos.z) < 7) return m.group.position;
+  }
+  return null;
+}
+
 async function renderBoard(el, limit, highlightName) {
   const hdr = '<div class="hdr">&mdash; FASTEST SOULS &mdash;</div>';
   el.innerHTML = hdr + '<div class="row"><span class="nm">CONSULTING THE BONES&hellip;</span></div>';
@@ -816,6 +985,35 @@ function showStreak(txt) {
   const el = $('streak'); el.textContent = txt;
   el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
 }
+function roomWhisper(idx) {
+  if (idx === 1) return cycle > 0
+    ? 'The stones remember your footsteps. The crate sits empty.'
+    : 'You wake on cold stone. Your name will not come when you call it.';
+  const W = {
+    2: 'The hallway smells of rain, from a day you almost remember.',
+    3: pet.taken ? 'Something small keeps pace behind you. It is trying to be brave.'
+                 : 'The writing on the wall was meant for you.',
+    4: 'You knew a laugh once. It sounded like bells. You cannot place whose.',
+    5: 'The reapers bow their heads as they strike. It looks like mourning.',
+    6: 'There was a tree. There was an afternoon that refused to end.',
+    7: pet.taken ? 'The little one watches you like it has always known you.'
+                 : 'Whatever you left behind is still waiting where you left it.',
+    8: pet.taken ? 'It is slowing down. You pretend not to notice.'
+                 : 'The house grows quiet, as if holding something back.',
+    9: pet.taken ? 'You remember now. You carried it because you could not put it down.'
+                 : 'You remember now. You were meant to carry something.',
+    10:'The last door. The question is already waiting.',
+  };
+  return W[idx];
+}
+function showWhisper(text) {
+  if (!text) return;
+  const w = $('whisper');
+  w.textContent = text;
+  w.classList.add('show');
+  clearTimeout(showWhisper.t);
+  showWhisper.t = setTimeout(() => w.classList.remove('show'), 5200);
+}
 function showToast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
   clearTimeout(showToast.t);
@@ -835,18 +1033,46 @@ function updateHUD() {
 /* ============================================================ INPUT */
 const keys = {};
 const joy = { active:false, id:null, ox:0, oy:0, x:0, y:0 };
+function togglePause() {
+  if (gameState === 'playing') {
+    gameState = 'paused';
+    $('pausemenu').style.display = 'flex';
+  } else if (gameState === 'paused') {
+    gameState = 'playing';
+    $('pausemenu').style.display = 'none';
+  }
+}
 addEventListener('keydown', e => {
   if (e.target instanceof HTMLInputElement) return;   // typing a leaderboard name
   if (e.repeat) return;
   keys[e.code] = true;
   if (gameState === 'title') { startGame(); return; }
   if (gameState === 'dead')  { resetGame(); return; }
+  if (e.code === 'Escape' || e.code === 'KeyP') { togglePause(); return; }
+  if (gameState === 'paused') return;
   if (e.code === 'KeyJ' || e.code === 'Enter') tryAttack();
   if (e.code === 'Space' || e.code === 'ShiftLeft' || e.code === 'ShiftRight') { e.preventDefault(); tryDodge(); }
   if (e.code === 'KeyK') tryParry();
   if (e.code === 'KeyE') takePet();
 });
 $('prompt').addEventListener('pointerdown', () => { ensureAudio(); takePet(); });
+$('pausebtn').addEventListener('pointerdown', e => { e.stopPropagation(); ensureAudio(); togglePause(); });
+$('btnresume').addEventListener('pointerdown', togglePause);
+$('btnrestart').addEventListener('pointerdown', () => { $('pausemenu').style.display = 'none'; resetGame(); });
+$('btnquit').addEventListener('pointerdown', () => location.reload());
+$('btninvite').addEventListener('pointerdown', () => {
+  $('invitebox').style.display = 'block';
+  updateInviteBox();
+  coopConnect(null);
+});
+$('btncopy').addEventListener('pointerdown', async () => {
+  if (!coop.code) return;
+  try {
+    await navigator.clipboard.writeText(inviteUrl());
+    $('btncopy').textContent = 'COPIED';
+    setTimeout(() => $('btncopy').textContent = 'COPY LINK', 1500);
+  } catch {}
+});
 $('btnstay').addEventListener('pointerdown', () => {
   $('endchoice').style.display = 'none';
   sfx.sad();
@@ -856,8 +1082,9 @@ $('btnbye').addEventListener('pointerdown', () => {
   $('endchoice').style.display = 'none';
   $('truescene').style.display = 'flex';
   sfx.farewell();
-  setTimeout(() => $('byemsg').classList.add('show'), 4000);
-  setTimeout(() => $('byeend').classList.add('show'), 7500);
+  setTimeout(() => $('byepre').classList.add('show'), 1400);
+  setTimeout(() => $('byemsg').classList.add('show'), 5200);
+  setTimeout(() => $('byeend').classList.add('show'), 9000);
 });
 $('truescene').addEventListener('pointerdown', () => {
   if (!$('byeend').classList.contains('show')) return;
@@ -1074,7 +1301,10 @@ function killEnemy(e) {
   if (enemies.every(x => x.dead)) {
     player.hp = Math.min(player.maxHp, player.hp + 25);
     if (pet.taken) pet.celebrateT = 2.2;
-    if (room === FINAL_ROOM) finalExit = true;
+    if (room === FINAL_ROOM) {
+      finalExit = true;
+      showWhisper('The reaper bows as it fades. The question was the test.');
+    }
     setTimeout(openDoor, 700);
   }
 }
@@ -1104,7 +1334,8 @@ function hurtPlayer(dmg, fromPos) {
   if (player.hp <= 0) {
     player.hp = 0; player.state = 'dead'; player.stateT = 0;
     setTimeout(() => {
-      $('deathstats').textContent = `THE HOUSE CLAIMED YOU IN ROOM ${room} — BEST: ROOM ${bestRoom}`;
+      const line = DEATH_LINES[Math.floor(Math.random()*DEATH_LINES.length)];
+      $('deathstats').innerHTML = `${line}<br>FELL IN ROOM ${room} &middot; BEST ROOM ${bestRoom}`;
       $('deathscreen').style.display = 'flex';
       gameState = 'dead';
     }, 1300);
@@ -1119,6 +1350,7 @@ function startGame() {
   gameState = 'playing';
   runTime = 0;
   startRoom(1, true);
+  if (JOIN_CODE && !coop.active) coopConnect(JOIN_CODE);
 }
 function resetGame() {
   $('deathscreen').style.display = 'none';
@@ -1153,9 +1385,14 @@ function startRoom(idx, resetPos) {
   $('roomnum').textContent = 'ROOM ' + idx;
   if (idx === FINAL_ROOM) showBanner('THE LAST REAPER', '"WILL YOU CARRY YOUR GRIEF FOREVER?"');
   else {
-    const name = idx % 5 === 0 ? 'A GREATER DEATH AWAITS' : ROOM_NAMES[(idx-1) % ROOM_NAMES.length];
+    let name = idx % 5 === 0 ? 'A GREATER DEATH AWAITS' : ROOM_NAMES[(idx-1) % ROOM_NAMES.length];
+    if (idx === 1 && cycle > 0) name = 'THE FOYER, AGAIN';
     showBanner('ROOM ' + idx, name);
   }
+  clearTimeout(startRoom.whisperT);
+  startRoom.whisperT = setTimeout(() => {
+    if (gameState === 'playing') showWhisper(roomWhisper(idx));
+  }, 1700);
 }
 function nextRoom() {
   if (room === 1 && !pet.taken && pet.group.visible) {
@@ -1561,6 +1798,10 @@ function updatePet(dt) {
     } else if (threat) {                            // cowers at your heels
       target = new THREE.Vector3(player.pos.x - fx*1.0, 0, player.pos.z - fz*1.0);
       hover = 0.26; speed = 9;
+    } else if (coop.active && pet.idleT > 2.5 && nearestPartnerPos()) {
+      const pp = nearestPartnerPos();               // settles between the two souls
+      target = new THREE.Vector3((player.pos.x + pp.x)/2, 0, (player.pos.z + pp.z)/2);
+      hover = 0.16;
     } else if (pet.idleT > 5) {                     // curls up to sleep beside you
       target = new THREE.Vector3(player.pos.x + fz*0.8, 0, player.pos.z - fx*0.8);
       hover = 0.14;
@@ -1637,8 +1878,8 @@ function animate() {
   }
 
   if (bossIntroT > 0) bossIntroT -= raw;
-  if (gameState === 'playing') {
-    runTime += raw;
+  if (gameState === 'playing' || gameState === 'paused') {
+    runTime += raw;   // the clock is honest: pausing does not stop it
     $('timer').textContent = fmtTime(runTime*1000);
   }
   if (gameState === 'playing' || gameState === 'dead') {
@@ -1647,6 +1888,20 @@ function animate() {
     updatePet(dtP);
     updateParticles(dtW);
     updateHUD();
+  }
+  if (coop.active) {
+    coop.lastSend -= raw;
+    if (coop.lastSend <= 0 && gameState !== 'title') {
+      coop.lastSend = 0.12;
+      coop.client.mutation('presence:update', {
+        playerId: coop.playerId,
+        x: +player.pos.x.toFixed(2), z: +player.pos.z.toFixed(2),
+        facing: +player.facing.toFixed(2),
+        anim: player.state === 'dead' ? 'dead' : gameState === 'paused' ? 'idle' : player.state,
+        room, hp: Math.round(player.hp),
+      }).catch(() => {});
+    }
+    updatePartners(raw);
   }
 
   // camera follow + shake
@@ -1670,8 +1925,10 @@ animate();
 renderBoard($('titleboard'), 5, localStorage.getItem('dh_name'));
 
 /* debug handle for automated testing — local dev only, never in production */
+if (JOIN_CODE) $('startprompt').textContent = 'PRESS ANY KEY TO WAKE BESIDE A FRIEND';
+
 if (['localhost', '127.0.0.1'].includes(location.hostname)) {
-  window.__dbg = { player, pet,
+  window.__dbg = { player, pet, coop,
     enemies: () => enemies, room: () => room, state: () => gameState,
     step: (dt = 0.016, n = 1) => { for (let i = 0; i < n; i++) {
       if (bossIntroT > 0) bossIntroT -= dt;
