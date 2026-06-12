@@ -1,25 +1,643 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import Projects from '../components/Projects.astro';
-import Experience from '../components/Experience.astro';
-import Footer from '../components/Footer.astro';
+import V2Layout from '../layouts/V2Layout.astro';
+
+const projects = [
+  {
+    title: 'Doggins',
+    year: '2026',
+    blurb: 'A gym session planner that tracks lifting and running in one place. AI program generation, launching soon.',
+    link: 'https://doggins.app',
+    tags: ['AI', 'Fitness'],
+  },
+  {
+    title: 'Yotpoint',
+    year: '2024',
+    blurb: 'A marketplace connecting superyacht crews with vetted service providers. Co-founding it now.',
+    link: 'https://yotpoint.com',
+    tags: ['Next.js', 'AWS Lambda', 'DynamoDB'],
+  },
+  {
+    title: 'Emotional Scripture',
+    year: '2024',
+    blurb: 'A small web app that maps emotions to scripture across religions.',
+    link: 'https://emotionalscripture.pages.dev/',
+    tags: ['Vue', 'Cloudflare Pages'],
+  },
+  {
+    title: 'Latch Log',
+    year: '2024',
+    blurb: 'A feed and nappy tracker for new parents. Offline-first PWA with analytics.',
+    link: 'https://latchlog.pages.dev',
+    tags: ['Vue', 'Convex', 'PWA'],
+  },
+  {
+    title: 'Villa La Mole',
+    year: '2020',
+    blurb: 'Booking site and owner dashboard for a holiday home in the south of France.',
+    link: 'https://www.villalamole.com',
+    tags: ['Vue', 'React', 'Convex'],
+  },
+];
+
+const experience = [
+  {
+    period: '2024 — now',
+    company: 'Yotpoint',
+    role: 'Technical Co-Founder',
+    note: 'Building the product end to end: Next.js front, Node and AWS behind it.',
+  },
+  {
+    period: '2023 — 24',
+    company: 'Sabbatical',
+    role: 'Product & business',
+    note: 'MBA essentials at LSE, a product course at Barclays Eagle Labs, side projects.',
+  },
+  {
+    period: '2020 — 23',
+    company: 'Glofox',
+    role: 'Product Engineer',
+    note: 'Resolved 50+ P1s during COVID, then led the redesign of core services off the legacy monolith.',
+  },
+  {
+    period: '2018 — 20',
+    company: 'CGI',
+    role: 'Technical Consultant',
+    note: 'UK government infrastructure. Spring Boot on AWS, REST APIs, internal tooling.',
+  },
+  {
+    period: '2015 — 18',
+    company: 'Gamesys',
+    role: 'Graduate Engineer',
+    note: 'Real-time event pipelines, payments, data migrations. First time shipping to millions.',
+  },
+];
+
+const skills = [
+  'Next.js', 'React', 'Vue', 'Node.js', 'TypeScript', 'Tailwind',
+  'AWS Lambda', 'DynamoDB', 'Convex', 'Cloudflare', 'GCP', 'Docker',
+];
 ---
 
-<BaseLayout>
-  <div transition:name="home-content" transition:persist>
-    <main class="pt-16 pb-16">
-      <Hero />
-      <Projects />
-      <Experience />
-    </main>
+<V2Layout>
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <p class="hero-eyebrow"><span class="eyebrow-line"></span>Technical co-founder, Yotpoint</p>
+    <h1 class="hero-title" aria-label="Freddie Kealy">
+      <span class="line"><span class="word" data-split>FREDDIE</span></span>
+      <span class="line line-indent"><span class="word word-accent" data-split>KEALY</span></span>
+    </h1>
+    <div class="hero-foot">
+      <p class="hero-tagline">From superyachts to baby poop,<br />I ship useful tools across the web.</p>
+      <div class="hero-meta">
+        <p>Full-stack engineer</p>
+        <p>UK / remote</p>
+      </div>
+    </div>
+    <a class="scroll-hint" href="#work" data-hover aria-label="Scroll to work">
+      <span>Scroll</span>
+      <svg width="12" height="32" viewBox="0 0 12 32" fill="none" aria-hidden="true">
+        <path d="M6 0v28m0 0l5-5m-5 5l-5-5" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </a>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      {Array.from({ length: 2 }).map(() => (
+        <span class="marquee-chunk">
+          Founder <i>✦</i> Product builder <i>✦</i> Full-stack <i>✦</i> Next.js <i>✦</i> AWS <i>✦</i>&nbsp;
+        </span>
+      ))}
+    </div>
   </div>
-    <Footer />
 
-</BaseLayout>
+  <!-- WORK -->
+  <section class="work" id="work">
+    <div class="section-head">
+      <h2 class="section-title" data-reveal>Selected work</h2>
+      <p class="section-count">({projects.length})</p>
+    </div>
+    <ul class="work-list">
+      {projects.map((p, i) => (
+        <li class="work-row" data-row>
+          <a
+            class="work-link"
+            href={p.link ?? undefined}
+            target={p.link ? '_blank' : undefined}
+            rel={p.link ? 'noopener noreferrer' : undefined}
+            data-hover
+          >
+            <span class="work-index">0{i + 1}</span>
+            <span class="work-main">
+              <span class="work-title">{p.title}</span>
+              <span class="work-blurb">{p.blurb}</span>
+            </span>
+            <span class="work-side">
+              <span class="work-tags">{p.tags.join(' · ')}</span>
+              <span class="work-year">{p.year}{p.link ? '' : ' · offline'}</span>
+            </span>
+            <span class="work-arrow" aria-hidden="true">{p.link ? '↗' : '✕'}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a class="ghost-link" href="https://github.com/fkealy" target="_blank" rel="noopener noreferrer" data-hover>
+      More on GitHub ↗
+    </a>
+  </section>
 
-<style>
-  html {
-    scroll-behavior: smooth;
-  }
-</style>
+  <!-- ABOUT / STATEMENT -->
+  <section class="about" id="about">
+    <p class="statement">
+      <span class="statement-line">I've spent ten years building software,</span>
+      <span class="statement-line">from government infrastructure to gym SaaS</span>
+      <span class="statement-line">to a marketplace I'm co-founding now.</span>
+      <span class="statement-line statement-accent">I like small teams and shipped products.</span>
+    </p>
+    <div class="skills-strip" aria-label="Tech stack">
+      {skills.map((s) => <span class="skill-chip" data-chip>{s}</span>)}
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="exp" id="experience">
+    <div class="section-head">
+      <h2 class="section-title" data-reveal>Experience</h2>
+      <p class="section-count">(10 yrs)</p>
+    </div>
+    <div class="exp-timeline">
+      <div class="exp-progress" aria-hidden="true"></div>
+      <ol class="exp-list">
+        {experience.map((e) => (
+          <li class="exp-item" data-row>
+            <div class="exp-period">{e.period}</div>
+            <div class="exp-body">
+              <h3 class="exp-company">{e.company}</h3>
+              <p class="exp-role">{e.role}</p>
+              <p class="exp-note">{e.note}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <p class="contact-kicker" data-reveal>Got something to build?</p>
+    <a class="contact-big" href="mailto:fkealy.dev@gmail.com" data-hover data-magnetic>
+      <span class="word" data-split>SAY&nbsp;HELLO</span>
+    </a>
+    <div class="contact-links">
+      <a href="https://github.com/fkealy" target="_blank" rel="noopener noreferrer" data-hover>GitHub</a>
+      <a href="https://www.linkedin.com/in/freddie-kealy-140b05b5/" target="_blank" rel="noopener noreferrer" data-hover>LinkedIn</a>
+      <a href="/blog" data-hover>Blog</a>
+    </div>
+    <p class="contact-foot">© {new Date().getFullYear()} Freddie Kealy · Built with Astro, GSAP & three.js</p>
+  </section>
+
+  <style is:global>
+    /* Hero */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding-top: 6rem;
+    }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-family: var(--font-mono);
+      font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      margin-bottom: clamp(1rem, 3vw, 2rem);
+      opacity: 0;
+    }
+    .eyebrow-line {
+      display: inline-block;
+      width: 3rem;
+      height: 1px;
+      background: var(--accent);
+    }
+    .hero-title {
+      font-weight: 600;
+      font-size: clamp(3.4rem, 14.5vw, 13.5rem);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+    }
+    .hero-title .line { display: block; overflow: hidden; }
+    .line-indent { padding-left: clamp(2rem, 10vw, 12rem); }
+    .word { display: inline-block; }
+    .word-accent {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--accent);
+    }
+    @media (max-width: 600px) {
+      .word-accent { -webkit-text-stroke: 1.2px var(--accent); }
+    }
+    .hero-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 2rem;
+      margin-top: clamp(2rem, 5vw, 4rem);
+      flex-wrap: wrap;
+      opacity: 0;
+    }
+    .hero-tagline {
+      font-size: clamp(1.05rem, 2.4vw, 1.6rem);
+      line-height: 1.4;
+      max-width: 34ch;
+      color: var(--ink);
+    }
+    .hero-meta {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ink-dim);
+      text-align: right;
+      line-height: 1.9;
+    }
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: clamp(1.25rem, 4vw, 3rem);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: var(--ink-dim);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      opacity: 0;
+    }
+    .scroll-hint svg { animation: bob 2s ease-in-out infinite; }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+
+    /* Marquee */
+    .marquee {
+      overflow: hidden;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 0.9rem 0;
+      background: rgba(10, 10, 14, 0.55);
+      backdrop-filter: blur(4px);
+      position: relative;
+      z-index: 2;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+    .marquee-chunk {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--ink-dim);
+      white-space: nowrap;
+    }
+    .marquee-chunk i {
+      font-style: normal;
+      color: var(--accent);
+      padding: 0 1.2rem;
+    }
+    @keyframes marquee {
+      to { transform: translateX(-50%); }
+    }
+
+    /* Work list */
+    .work-list { list-style: none; }
+    .work-row { border-bottom: 1px solid var(--line); }
+    .work-link {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: clamp(1rem, 3vw, 2.5rem);
+      padding: clamp(1.4rem, 3vw, 2.2rem) 0.5rem;
+      color: var(--ink);
+      text-decoration: none;
+      position: relative;
+      transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .work-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(245, 185, 66, 0.09), transparent 65%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+    @media (hover: hover) {
+      .work-link:hover { padding-left: 1.6rem; }
+      .work-link:hover::before { opacity: 1; }
+      .work-link:hover .work-title { color: var(--accent); }
+      .work-link:hover .work-arrow { transform: translate(4px, -4px); color: var(--accent); }
+    }
+    .work-index {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--ink-dim);
+    }
+    .work-title {
+      display: block;
+      font-size: clamp(1.5rem, 4.5vw, 3.2rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+    .work-blurb {
+      display: block;
+      margin-top: 0.4rem;
+      color: var(--ink-dim);
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      max-width: 52ch;
+      line-height: 1.5;
+    }
+    .work-side {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-dim);
+      line-height: 1.9;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .work-arrow {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    @media (max-width: 700px) {
+      .work-link { grid-template-columns: auto 1fr auto; }
+      .work-side { display: none; }
+    }
+
+    /* About statement */
+    .about { text-align: left; }
+    .statement {
+      font-size: clamp(1.6rem, 4.6vw, 3.6rem);
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      max-width: 24em;
+    }
+    .statement-line { display: block; }
+    .statement-accent { color: var(--accent); }
+    .skills-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: clamp(2.5rem, 6vw, 4.5rem);
+    }
+    .skill-chip {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-dim);
+      border: 1px solid var(--line);
+      padding: 0.55rem 0.95rem;
+      border-radius: 99px;
+      transition: color 0.25s, border-color 0.25s;
+    }
+    .skill-chip:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* Experience */
+    .exp-timeline { position: relative; padding-left: clamp(1.4rem, 4vw, 3rem); }
+    .exp-progress {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--line);
+      overflow: hidden;
+    }
+    .exp-progress::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: scaleY(var(--p, 0));
+      transform-origin: top;
+    }
+    .exp-list { list-style: none; }
+    .exp-item {
+      display: grid;
+      grid-template-columns: minmax(7.5rem, 11rem) 1fr;
+      gap: clamp(1rem, 3vw, 2.5rem);
+      padding: clamp(1.4rem, 3vw, 2rem) 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .exp-item:last-child { border-bottom: none; }
+    .exp-period {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      padding-top: 0.45rem;
+    }
+    .exp-company {
+      font-size: clamp(1.3rem, 3.2vw, 2rem);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+    .exp-role {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-dim);
+      margin: 0.3rem 0 0.7rem;
+    }
+    .exp-note { color: var(--ink-dim); line-height: 1.6; max-width: 60ch; }
+    @media (max-width: 600px) {
+      .exp-item { grid-template-columns: 1fr; gap: 0.4rem; }
+    }
+
+    /* Contact */
+    .contact {
+      text-align: center;
+      padding-bottom: 3rem;
+    }
+    .contact-kicker {
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: clamp(0.75rem, 1.6vw, 0.95rem);
+      color: var(--ink-dim);
+      margin-bottom: 1.5rem;
+    }
+    .contact-big {
+      display: inline-block;
+      font-size: clamp(3rem, 13vw, 11rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: transparent;
+      -webkit-text-stroke: 2px var(--ink);
+      text-decoration: none;
+      line-height: 1;
+      overflow: hidden;
+      transition: color 0.4s ease, -webkit-text-stroke-color 0.4s ease;
+      will-change: transform;
+    }
+    .contact-big:hover {
+      color: var(--accent);
+      -webkit-text-stroke-color: var(--accent);
+    }
+    @media (max-width: 600px) {
+      .contact-big { -webkit-text-stroke-width: 1.2px; }
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: clamp(1.2rem, 4vw, 2.5rem);
+      margin-top: clamp(2rem, 5vw, 3.5rem);
+    }
+    .contact-links a {
+      color: var(--ink);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.3rem;
+      transition: color 0.25s, border-color 0.25s;
+    }
+    .contact-links a:hover { color: var(--accent); border-color: var(--accent); }
+    .contact-foot {
+      margin-top: clamp(2.5rem, 6vw, 4rem);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-dim);
+      letter-spacing: 0.08em;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .marquee-track, .scroll-hint svg { animation: none !important; }
+    }
+  </style>
+
+  <script>
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import { reduceMotion, splitChars } from '../scripts/v2';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (reduceMotion) {
+      gsap.set('.hero-eyebrow, .hero-foot, .scroll-hint', { opacity: 1 });
+    } else {
+      // Hero intro
+      const heroChars = Array.from(document.querySelectorAll('.hero-title [data-split]')).flatMap(splitChars);
+      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+      tl.from(heroChars, {
+        yPercent: 115,
+        rotate: 4,
+        duration: 1.1,
+        stagger: 0.035,
+        delay: 0.15,
+      })
+        .to('.hero-eyebrow', { opacity: 1, duration: 0.7 }, '-=0.7')
+        .to('.hero-foot', { opacity: 1, duration: 0.7 }, '-=0.45')
+        .to('.scroll-hint', { opacity: 1, duration: 0.7 }, '-=0.4');
+
+      // If rAF stalls (background tab on load, odd embedded contexts), make
+      // sure the hero never stays hidden.
+      setTimeout(() => {
+        if (tl.progress() < 1) tl.progress(1);
+      }, 3500);
+
+      // Hero parallax out
+      gsap.to('.hero-title', {
+        yPercent: -18,
+        opacity: 0.25,
+        ease: 'none',
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
+      });
+
+      // Section title reveals
+      document.querySelectorAll('[data-reveal]').forEach((el) => {
+        gsap.from(el, {
+          y: 50,
+          opacity: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%' },
+        });
+      });
+
+      // Row reveals (work + experience)
+      document.querySelectorAll('[data-row]').forEach((el) => {
+        gsap.from(el, {
+          y: 60,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 92%' },
+        });
+      });
+
+      // Statement lines
+      gsap.from('.statement-line', {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.12,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.statement', start: 'top 80%' },
+      });
+
+      // Skill chips pop
+      gsap.from('[data-chip]', {
+        scale: 0.6,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.04,
+        ease: 'back.out(2)',
+        scrollTrigger: { trigger: '.skills-strip', start: 'top 90%' },
+      });
+
+      // Experience progress line scrub
+      const progress = document.querySelector('.exp-progress') as HTMLElement | null;
+      if (progress) {
+        ScrollTrigger.create({
+          trigger: '.exp-timeline',
+          start: 'top 75%',
+          end: 'bottom 55%',
+          scrub: 0.5,
+          onUpdate: (self) => progress.style.setProperty('--p', String(self.progress)),
+        });
+      }
+
+      // Contact big-type reveal
+      const contactChars = Array.from(document.querySelectorAll('.contact-big [data-split]')).flatMap(splitChars);
+      gsap.from(contactChars, {
+        yPercent: 110,
+        duration: 0.9,
+        stagger: 0.04,
+        ease: 'power4.out',
+        scrollTrigger: { trigger: '.contact', start: 'top 70%' },
+      });
+    }
+  </script>
+</V2Layout>

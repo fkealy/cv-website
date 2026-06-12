@@ -1,65 +1,215 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Footer from '../../components/Footer.astro';
+import V2Layout from '../../layouts/V2Layout.astro';
 
 const posts = (await getCollection('blog'))
-  .filter(post => !post.data.draft)
+  .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 ---
 
-<BaseLayout title="Blog - Freddie Kealy" description="Thoughts on building products, technical challenges, and lessons learned">
-  <div transition:name="blog-content">
-    <main class="pt-32 pb-16 px-4 min-h-screen">
-    <div class="max-w-4xl mx-auto">
-      <div class="inline-block bg-primary-100 border-2 border-gray-800 px-6 py-3 mb-6">
-        <h1 class="text-5xl md:text-6xl font-bold text-gray-900 uppercase">Blog</h1>
-      </div>
+<V2Layout title="Writing — Freddie Kealy" description="Notes on building products and what I learn along the way." waveAmp={0.45}>
+  <section class="blog-hero">
+    <p class="blog-eyebrow"><span class="eyebrow-line"></span>The blog</p>
+    <h1 class="blog-title">
+      <span class="line"><span class="word" data-split>WRITING</span></span>
+    </h1>
+    <p class="blog-sub">Notes on building products and what I learn along the way.</p>
+  </section>
 
-      <div class="bg-white border-2 border-gray-300 p-6 mb-12">
-        <p class="text-xl font-semibold text-gray-700">
-          Thoughts on building products, technical challenges, and lessons learned
-        </p>
-      </div>
-
-      {posts.length === 0 ? (
-        <div class="bg-gray-50 border-2 border-gray-300 p-12 text-center">
-          <p class="text-xl font-bold text-gray-700">
-            No posts yet. Check back soon!
-          </p>
-        </div>
-      ) : (
-        <div class="space-y-6">
-          {posts.map((post) => (
-            <article class="bg-white border-2 border-gray-300 p-8 hover:border-gray-800 transition-colors duration-300">
-              <a href={`/blog/${post.slug}`} class="block group" data-astro-reload>
-                <div class="flex items-start justify-between gap-4 mb-4">
-                  <h2 class="text-3xl md:text-4xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors duration-300 uppercase">
-                    {post.data.title}
-                  </h2>
-                  <div class="bg-primary-100 border border-gray-300 px-3 py-1 font-bold text-xs uppercase tracking-wide whitespace-nowrap">
-                    {post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                  </div>
-                </div>
-
-                <p class="text-lg font-semibold text-gray-700 mb-6 leading-relaxed">{post.data.description}</p>
-
-                {post.data.tags.length > 0 && (
-                  <div class="flex flex-wrap gap-2">
-                    {post.data.tags.map((tag) => (
-                      <span class="px-3 py-1 bg-gray-100 text-gray-800 font-bold text-xs uppercase tracking-wide border border-gray-300">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </a>
-            </article>
-          ))}
-        </div>
-      )}
+  <section class="posts">
+    <div class="section-head">
+      <h2 class="section-title" data-reveal>All posts</h2>
+      <p class="section-count">({posts.length})</p>
     </div>
-  </main>
-  <Footer />
-  </div>
-</BaseLayout>
+
+    {posts.length === 0 ? (
+      <p class="posts-empty">Nothing here yet.</p>
+    ) : (
+      <ul class="post-list">
+        {posts.map((post, i) => (
+          <li class="post-row" data-row>
+            <a class="post-link" href={`/blog/${post.slug}`} data-hover>
+              <span class="post-index">0{i + 1}</span>
+              <span class="post-main">
+                <span class="post-title">{post.data.title}</span>
+                <span class="post-desc">{post.data.description}</span>
+              </span>
+              <span class="post-side">
+                {post.data.tags.length > 0 && <span class="post-tags">{post.data.tags.slice(0, 3).join(' · ')}</span>}
+                <time class="post-date" datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time>
+              </span>
+              <span class="post-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <a class="ghost-link" href="/" data-hover>← Back home</a>
+  </section>
+
+  <style is:global>
+    .blog-hero {
+      min-height: 52svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 8rem;
+      padding-bottom: clamp(2rem, 4vw, 3.5rem);
+    }
+    .blog-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-family: var(--font-mono);
+      font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      margin-bottom: clamp(1rem, 3vw, 2rem);
+      opacity: 0;
+    }
+    .eyebrow-line {
+      display: inline-block;
+      width: 3rem;
+      height: 1px;
+      background: var(--accent);
+    }
+    .blog-title {
+      font-weight: 600;
+      font-size: clamp(3.4rem, 13vw, 11.5rem);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+    }
+    .blog-title .line { display: block; overflow: hidden; }
+    .word { display: inline-block; }
+    .blog-sub {
+      margin-top: clamp(1.2rem, 3vw, 2rem);
+      font-size: clamp(1rem, 2.2vw, 1.4rem);
+      color: var(--ink-dim);
+      max-width: 40ch;
+      opacity: 0;
+    }
+
+    .posts { padding-top: 0; }
+    .posts-empty {
+      font-family: var(--font-mono);
+      color: var(--ink-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .post-list { list-style: none; }
+    .post-row { border-bottom: 1px solid var(--line); }
+    .post-link {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: clamp(1rem, 3vw, 2.5rem);
+      padding: clamp(1.4rem, 3vw, 2.2rem) 0.5rem;
+      color: var(--ink);
+      text-decoration: none;
+      position: relative;
+      transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .post-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(245, 185, 66, 0.09), transparent 65%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+    @media (hover: hover) {
+      .post-link:hover { padding-left: 1.6rem; }
+      .post-link:hover::before { opacity: 1; }
+      .post-link:hover .post-title { color: var(--accent); }
+      .post-link:hover .post-arrow { transform: translateX(6px); color: var(--accent); }
+    }
+    .post-index {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--ink-dim);
+    }
+    .post-title {
+      display: block;
+      font-size: clamp(1.3rem, 3.6vw, 2.6rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      transition: color 0.3s ease;
+    }
+    .post-desc {
+      display: block;
+      margin-top: 0.4rem;
+      color: var(--ink-dim);
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      max-width: 60ch;
+      line-height: 1.5;
+    }
+    .post-side {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-dim);
+      line-height: 1.9;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-arrow {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    @media (max-width: 700px) {
+      .post-link { grid-template-columns: auto 1fr auto; }
+      .post-side { display: none; }
+    }
+  </style>
+
+  <script>
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import { reduceMotion, splitChars } from '../../scripts/v2';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (reduceMotion) {
+      gsap.set('.blog-eyebrow, .blog-sub', { opacity: 1 });
+    } else {
+      const chars = Array.from(document.querySelectorAll('.blog-title [data-split]')).flatMap(splitChars);
+      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+      tl.from(chars, { yPercent: 115, rotate: 4, duration: 1.1, stagger: 0.04, delay: 0.15 })
+        .to('.blog-eyebrow', { opacity: 1, duration: 0.7 }, '-=0.7')
+        .to('.blog-sub', { opacity: 1, duration: 0.7 }, '-=0.45');
+
+      setTimeout(() => {
+        if (tl.progress() < 1) tl.progress(1);
+      }, 3500);
+
+      document.querySelectorAll('[data-reveal]').forEach((el) => {
+        gsap.from(el, {
+          y: 50,
+          opacity: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%' },
+        });
+      });
+
+      document.querySelectorAll('[data-row]').forEach((el) => {
+        gsap.from(el, {
+          y: 60,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 92%' },
+        });
+      });
+    }
+  </script>
+</V2Layout>
