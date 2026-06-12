@@ -1,9 +1,14 @@
 ---
-// Standalone redesigned landing page. Deliberately not using BaseLayout:
-// the dark full-bleed design and GSAP scroll choreography conflict with
-// the site-wide view transitions and light nav.
+import V2Layout from '../layouts/V2Layout.astro';
 
 const projects = [
+  {
+    title: 'Doggins',
+    year: '2026',
+    blurb: 'A gym session planner that tracks lifting and running in one place. AI program generation, launching soon.',
+    link: 'https://doggins.app',
+    tags: ['AI', 'Fitness'],
+  },
   {
     title: 'Yotpoint',
     year: '2024',
@@ -73,290 +78,127 @@ const skills = [
 ];
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <link rel="icon" type="image/svg+xml" href="/bee-favicon.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Freddie Kealy. Full-stack engineer and technical co-founder of Yotpoint. From superyachts to baby poop, I ship useful tools across the web." />
-  <meta name="theme-color" content="#0a0a0e" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Freddie Kealy" />
-  <meta property="og:description" content="Full-stack engineer and technical co-founder of Yotpoint." />
-  <title>Freddie Kealy</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "35fae063ae114a9cb2bee51bb088071c"}'></script>
-</head>
-<body>
-  <!-- WebGL backdrop -->
-  <canvas id="gl" aria-hidden="true"></canvas>
-  <div class="grain" aria-hidden="true"></div>
-
-  <!-- Custom cursor (desktop, fine pointers only) -->
-  <div class="cursor" aria-hidden="true"><div class="cursor-dot"></div></div>
-
-  <header class="topbar">
-    <a class="brand" href="/v2" data-hover>FK<span class="brand-dot">.</span></a>
-    <nav class="topnav" aria-label="Primary">
-      <a href="#work" data-hover>Work</a>
-      <a href="#about" data-hover>About</a>
-      <a href="#experience" data-hover>Experience</a>
-      <a href="#contact" data-hover>Contact</a>
-    </nav>
-    <a class="topbar-cta" href="mailto:fkealy.dev@gmail.com" data-hover>fkealy.dev@gmail.com</a>
-  </header>
-
-  <main id="main">
-    <!-- HERO -->
-    <section class="hero" id="top">
-      <p class="hero-eyebrow"><span class="eyebrow-line"></span>Technical co-founder, Yotpoint</p>
-      <h1 class="hero-title" aria-label="Freddie Kealy">
-        <span class="line"><span class="word" data-split>FREDDIE</span></span>
-        <span class="line line-indent"><span class="word word-accent" data-split>KEALY</span></span>
-      </h1>
-      <div class="hero-foot">
-        <p class="hero-tagline">From superyachts to baby poop,<br />I ship useful tools across the web.</p>
-        <div class="hero-meta">
-          <p>Full-stack engineer</p>
-          <p>UK / remote</p>
-        </div>
-      </div>
-      <a class="scroll-hint" href="#work" data-hover aria-label="Scroll to work">
-        <span>Scroll</span>
-        <svg width="12" height="32" viewBox="0 0 12 32" fill="none" aria-hidden="true">
-          <path d="M6 0v28m0 0l5-5m-5 5l-5-5" stroke="currentColor" stroke-width="1.5"/>
-        </svg>
-      </a>
-    </section>
-
-    <!-- MARQUEE -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track">
-        {Array.from({ length: 2 }).map(() => (
-          <span class="marquee-chunk">
-            Founder <i>✦</i> Product builder <i>✦</i> Full-stack <i>✦</i> Next.js <i>✦</i> AWS <i>✦</i>&nbsp;
-          </span>
-        ))}
+<V2Layout>
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <p class="hero-eyebrow"><span class="eyebrow-line"></span>Technical co-founder, Yotpoint</p>
+    <h1 class="hero-title" aria-label="Freddie Kealy">
+      <span class="line"><span class="word" data-split>FREDDIE</span></span>
+      <span class="line line-indent"><span class="word word-accent" data-split>KEALY</span></span>
+    </h1>
+    <div class="hero-foot">
+      <p class="hero-tagline">From superyachts to baby poop,<br />I ship useful tools across the web.</p>
+      <div class="hero-meta">
+        <p>Full-stack engineer</p>
+        <p>UK / remote</p>
       </div>
     </div>
+    <a class="scroll-hint" href="#work" data-hover aria-label="Scroll to work">
+      <span>Scroll</span>
+      <svg width="12" height="32" viewBox="0 0 12 32" fill="none" aria-hidden="true">
+        <path d="M6 0v28m0 0l5-5m-5 5l-5-5" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </a>
+  </section>
 
-    <!-- WORK -->
-    <section class="work" id="work">
-      <div class="section-head">
-        <h2 class="section-title" data-reveal>Selected work</h2>
-        <p class="section-count">({projects.length})</p>
-      </div>
-      <ul class="work-list">
-        {projects.map((p, i) => (
-          <li class="work-row" data-row>
-            <a
-              class="work-link"
-              href={p.link ?? undefined}
-              target={p.link ? '_blank' : undefined}
-              rel={p.link ? 'noopener noreferrer' : undefined}
-              data-hover
-            >
-              <span class="work-index">0{i + 1}</span>
-              <span class="work-main">
-                <span class="work-title">{p.title}</span>
-                <span class="work-blurb">{p.blurb}</span>
-              </span>
-              <span class="work-side">
-                <span class="work-tags">{p.tags.join(' · ')}</span>
-                <span class="work-year">{p.year}{p.link ? '' : ' · offline'}</span>
-              </span>
-              <span class="work-arrow" aria-hidden="true">{p.link ? '↗' : '✕'}</span>
-            </a>
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      {Array.from({ length: 2 }).map(() => (
+        <span class="marquee-chunk">
+          Founder <i>✦</i> Product builder <i>✦</i> Full-stack <i>✦</i> Next.js <i>✦</i> AWS <i>✦</i>&nbsp;
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- WORK -->
+  <section class="work" id="work">
+    <div class="section-head">
+      <h2 class="section-title" data-reveal>Selected work</h2>
+      <p class="section-count">({projects.length})</p>
+    </div>
+    <ul class="work-list">
+      {projects.map((p, i) => (
+        <li class="work-row" data-row>
+          <a
+            class="work-link"
+            href={p.link ?? undefined}
+            target={p.link ? '_blank' : undefined}
+            rel={p.link ? 'noopener noreferrer' : undefined}
+            data-hover
+          >
+            <span class="work-index">0{i + 1}</span>
+            <span class="work-main">
+              <span class="work-title">{p.title}</span>
+              <span class="work-blurb">{p.blurb}</span>
+            </span>
+            <span class="work-side">
+              <span class="work-tags">{p.tags.join(' · ')}</span>
+              <span class="work-year">{p.year}{p.link ? '' : ' · offline'}</span>
+            </span>
+            <span class="work-arrow" aria-hidden="true">{p.link ? '↗' : '✕'}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a class="ghost-link" href="https://github.com/fkealy" target="_blank" rel="noopener noreferrer" data-hover>
+      More on GitHub ↗
+    </a>
+  </section>
+
+  <!-- ABOUT / STATEMENT -->
+  <section class="about" id="about">
+    <p class="statement">
+      <span class="statement-line">I've spent ten years building software,</span>
+      <span class="statement-line">from government infrastructure to gym SaaS</span>
+      <span class="statement-line">to a marketplace I'm co-founding now.</span>
+      <span class="statement-line statement-accent">I like small teams and shipped products.</span>
+    </p>
+    <div class="skills-strip" aria-label="Tech stack">
+      {skills.map((s) => <span class="skill-chip" data-chip>{s}</span>)}
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="exp" id="experience">
+    <div class="section-head">
+      <h2 class="section-title" data-reveal>Experience</h2>
+      <p class="section-count">(10 yrs)</p>
+    </div>
+    <div class="exp-timeline">
+      <div class="exp-progress" aria-hidden="true"></div>
+      <ol class="exp-list">
+        {experience.map((e) => (
+          <li class="exp-item" data-row>
+            <div class="exp-period">{e.period}</div>
+            <div class="exp-body">
+              <h3 class="exp-company">{e.company}</h3>
+              <p class="exp-role">{e.role}</p>
+              <p class="exp-note">{e.note}</p>
+            </div>
           </li>
         ))}
-      </ul>
-      <a class="ghost-link" href="https://github.com/fkealy" target="_blank" rel="noopener noreferrer" data-hover>
-        More on GitHub ↗
-      </a>
-    </section>
+      </ol>
+    </div>
+  </section>
 
-    <!-- ABOUT / STATEMENT -->
-    <section class="about" id="about">
-      <p class="statement">
-        <span class="statement-line">I've spent ten years building software,</span>
-        <span class="statement-line">from government infrastructure to gym SaaS</span>
-        <span class="statement-line">to a marketplace I'm co-founding now.</span>
-        <span class="statement-line statement-accent">I like small teams and shipped products.</span>
-      </p>
-      <div class="skills-strip" aria-label="Tech stack">
-        {skills.map((s) => <span class="skill-chip" data-chip>{s}</span>)}
-      </div>
-    </section>
-
-    <!-- EXPERIENCE -->
-    <section class="exp" id="experience">
-      <div class="section-head">
-        <h2 class="section-title" data-reveal>Experience</h2>
-        <p class="section-count">(10 yrs)</p>
-      </div>
-      <div class="exp-timeline">
-        <div class="exp-progress" aria-hidden="true"></div>
-        <ol class="exp-list">
-          {experience.map((e) => (
-            <li class="exp-item" data-row>
-              <div class="exp-period">{e.period}</div>
-              <div class="exp-body">
-                <h3 class="exp-company">{e.company}</h3>
-                <p class="exp-role">{e.role}</p>
-                <p class="exp-note">{e.note}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section class="contact" id="contact">
-      <p class="contact-kicker" data-reveal>Got something to build?</p>
-      <a class="contact-big" href="mailto:fkealy.dev@gmail.com" data-hover data-magnetic>
-        <span class="word" data-split>SAY&nbsp;HELLO</span>
-      </a>
-      <div class="contact-links">
-        <a href="https://github.com/fkealy" target="_blank" rel="noopener noreferrer" data-hover>GitHub</a>
-        <a href="https://www.linkedin.com/in/freddie-kealy-140b05b5/" target="_blank" rel="noopener noreferrer" data-hover>LinkedIn</a>
-        <a href="/blog" data-hover>Blog</a>
-        <a href="/" data-hover>Classic site</a>
-      </div>
-      <p class="contact-foot">© {new Date().getFullYear()} Freddie Kealy · Built with Astro, GSAP & three.js</p>
-    </section>
-  </main>
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <p class="contact-kicker" data-reveal>Got something to build?</p>
+    <a class="contact-big" href="mailto:fkealy.dev@gmail.com" data-hover data-magnetic>
+      <span class="word" data-split>SAY&nbsp;HELLO</span>
+    </a>
+    <div class="contact-links">
+      <a href="https://github.com/fkealy" target="_blank" rel="noopener noreferrer" data-hover>GitHub</a>
+      <a href="https://www.linkedin.com/in/freddie-kealy-140b05b5/" target="_blank" rel="noopener noreferrer" data-hover>LinkedIn</a>
+      <a href="/v2/blog" data-hover>Blog</a>
+      <a href="/" data-hover>Classic site</a>
+    </div>
+    <p class="contact-foot">© {new Date().getFullYear()} Freddie Kealy · Built with Astro, GSAP & three.js</p>
+  </section>
 
   <style is:global>
-    :root {
-      --bg: #0a0a0e;
-      --bg-soft: #101018;
-      --ink: #f2efe8;
-      --ink-dim: #8d8a94;
-      --accent: #f5b942;
-      --line: rgba(242, 239, 232, 0.14);
-      --font-display: 'Space Grotesk', system-ui, sans-serif;
-      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html {
-      scroll-behavior: smooth;
-      background: var(--bg);
-    }
-
-    body {
-      font-family: var(--font-display);
-      background: var(--bg);
-      color: var(--ink);
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
-
-    ::selection { background: var(--accent); color: var(--bg); }
-
-    #gl {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .grain {
-      position: fixed;
-      inset: -50%;
-      width: 200%;
-      height: 200%;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.05;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)'/%3E%3C/svg%3E");
-      animation: grain 7s steps(8) infinite;
-    }
-    @keyframes grain {
-      0%, 100% { transform: translate(0, 0); }
-      25% { transform: translate(-3%, 2%); }
-      50% { transform: translate(2%, -3%); }
-      75% { transform: translate(-2%, -2%); }
-    }
-
-    /* Cursor */
-    .cursor {
-      position: fixed;
-      top: 0; left: 0;
-      z-index: 100;
-      pointer-events: none;
-      display: none;
-    }
-    .cursor-dot {
-      width: 14px; height: 14px;
-      margin: -7px 0 0 -7px;
-      border-radius: 50%;
-      background: var(--accent);
-      mix-blend-mode: difference;
-      transition: transform 0.25s ease;
-    }
-    .cursor.is-hover .cursor-dot { transform: scale(3.2); }
-    @media (pointer: fine) {
-      .cursor { display: block; }
-    }
-
-    /* Topbar */
-    .topbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-      padding: 1.1rem clamp(1.25rem, 4vw, 3rem);
-      mix-blend-mode: difference;
-      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .topbar.is-hidden { transform: translateY(-110%); }
-    .topbar a {
-      color: var(--ink);
-      text-decoration: none;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .brand {
-      font-family: var(--font-display) !important;
-      font-weight: 700;
-      font-size: 1.15rem !important;
-      letter-spacing: 0 !important;
-    }
-    .brand-dot { color: var(--accent); }
-    .topnav { display: flex; gap: 1.6rem; }
-    .topnav a { opacity: 0.75; transition: opacity 0.2s; }
-    .topnav a:hover { opacity: 1; }
-    .topbar-cta { opacity: 0.75; }
-    .topbar-cta:hover { opacity: 1; }
-    @media (max-width: 760px) {
-      .topbar-cta { display: none; }
-      .topnav { gap: 1rem; }
-    }
-
-    main { position: relative; z-index: 2; }
-
-    section {
-      padding: clamp(4.5rem, 10vw, 9rem) clamp(1.25rem, 4vw, 3rem);
-      max-width: 1500px;
-      margin: 0 auto;
-    }
-
     /* Hero */
     .hero {
       min-height: 100svh;
@@ -479,28 +321,6 @@ const skills = [
       to { transform: translateX(-50%); }
     }
 
-    /* Section heads */
-    .section-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: clamp(2rem, 5vw, 4rem);
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 1.2rem;
-    }
-    .section-title {
-      font-size: clamp(1.9rem, 5vw, 3.6rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-    }
-    .section-count {
-      font-family: var(--font-mono);
-      color: var(--accent);
-      font-size: clamp(0.8rem, 1.6vw, 1rem);
-    }
-
     /* Work list */
     .work-list { list-style: none; }
     .work-row { border-bottom: 1px solid var(--line); }
@@ -568,20 +388,6 @@ const skills = [
       .work-link { grid-template-columns: auto 1fr auto; }
       .work-side { display: none; }
     }
-    .ghost-link {
-      display: inline-block;
-      margin-top: 2.5rem;
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--ink-dim);
-      text-decoration: none;
-      border: 1px solid var(--line);
-      padding: 0.9rem 1.6rem;
-      transition: color 0.25s, border-color 0.25s;
-    }
-    .ghost-link:hover { color: var(--accent); border-color: var(--accent); }
 
     /* About statement */
     .about { text-align: left; }
@@ -727,191 +533,21 @@ const skills = [
       letter-spacing: 0.08em;
     }
 
-    /* Reveal defaults (overwritten by GSAP; keep content visible without JS) */
-    .no-js [data-reveal], .no-js [data-row] { opacity: 1 !important; transform: none !important; }
-
     @media (prefers-reduced-motion: reduce) {
-      .marquee-track, .scroll-hint svg, .grain { animation: none !important; }
-      html { scroll-behavior: auto; }
+      .marquee-track, .scroll-hint svg { animation: none !important; }
     }
   </style>
 
   <script>
     import gsap from 'gsap';
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
-    import * as THREE from 'three';
+    import { reduceMotion, splitChars } from '../scripts/v2';
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // ?static skips all animation — used for testing, same path as reduced motion
-    const reduceMotion =
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      new URLSearchParams(window.location.search).has('static');
-    const isMobile = window.matchMedia('(max-width: 760px)').matches;
-    const finePointer = window.matchMedia('(pointer: fine)').matches;
-
-    /* ---------------- three.js particle wave ---------------- */
-    function initGL() {
-      const canvas = document.getElementById('gl') as HTMLCanvasElement;
-      if (!canvas) return;
-
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: 'low-power' });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
-      renderer.setSize(window.innerWidth, window.innerHeight);
-
-      const scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x0a0a0e, 0.045);
-
-      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-      camera.position.set(0, 4.2, 11);
-      camera.lookAt(0, 0, 0);
-
-      const COLS = isMobile ? 80 : 140;
-      const ROWS = isMobile ? 50 : 90;
-      const SPACING = 0.42;
-      const count = COLS * ROWS;
-      const positions = new Float32Array(count * 3);
-      const seeds = new Float32Array(count);
-
-      let i = 0;
-      for (let x = 0; x < COLS; x++) {
-        for (let z = 0; z < ROWS; z++) {
-          positions[i * 3] = (x - COLS / 2) * SPACING;
-          positions[i * 3 + 1] = 0;
-          positions[i * 3 + 2] = (z - ROWS / 2) * SPACING;
-          seeds[i] = Math.random();
-          i++;
-        }
-      }
-
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1));
-
-      const material = new THREE.ShaderMaterial({
-        transparent: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending,
-        uniforms: {
-          uTime: { value: 0 },
-          uAmp: { value: 1.0 },
-          uPixelRatio: { value: renderer.getPixelRatio() },
-        },
-        vertexShader: /* glsl */ `
-          uniform float uTime;
-          uniform float uAmp;
-          uniform float uPixelRatio;
-          attribute float aSeed;
-          varying float vElev;
-          varying float vSeed;
-          void main() {
-            vec3 p = position;
-            float wave1 = sin(p.x * 0.55 + uTime * 0.7) * cos(p.z * 0.45 + uTime * 0.55);
-            float wave2 = sin(p.x * 0.18 - uTime * 0.35) * 1.6;
-            float wave3 = sin((p.x + p.z) * 0.9 + uTime * 1.1) * 0.18;
-            p.y = (wave1 * 0.55 + wave2 * 0.35 + wave3) * uAmp;
-            vElev = p.y;
-            vSeed = aSeed;
-            vec4 mv = modelViewMatrix * vec4(p, 1.0);
-            gl_Position = projectionMatrix * mv;
-            gl_PointSize = (1.6 + aSeed * 1.8) * uPixelRatio * (8.0 / -mv.z);
-          }
-        `,
-        fragmentShader: /* glsl */ `
-          varying float vElev;
-          varying float vSeed;
-          void main() {
-            vec2 uv = gl_PointCoord - 0.5;
-            float d = length(uv);
-            if (d > 0.5) discard;
-            float glow = smoothstep(0.5, 0.0, d);
-            vec3 deep = vec3(0.16, 0.20, 0.38);
-            vec3 amber = vec3(0.96, 0.73, 0.26);
-            vec3 col = mix(deep, amber, smoothstep(-0.4, 1.2, vElev) * (0.35 + vSeed * 0.65));
-            gl_FragColor = vec4(col, glow * 0.85);
-          }
-        `,
-      });
-
-      const points = new THREE.Points(geometry, material);
-      scene.add(points);
-
-      // Mouse parallax
-      const target = { x: 0, y: 0 };
-      if (finePointer) {
-        window.addEventListener('pointermove', (e) => {
-          target.x = (e.clientX / window.innerWidth - 0.5) * 2;
-          target.y = (e.clientY / window.innerHeight - 0.5) * 2;
-        }, { passive: true });
-      }
-
-      // Calm the wave as you scroll past the hero
-      ScrollTrigger.create({
-        trigger: '.hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true,
-        onUpdate: (self) => {
-          material.uniforms.uAmp.value = 1.0 - self.progress * 0.7;
-          points.position.y = -self.progress * 2.5;
-        },
-      });
-
-      const t0 = performance.now();
-      let rafId = 0;
-      let visible = true;
-
-      function tick() {
-        const t = (performance.now() - t0) / 1000;
-        material.uniforms.uTime.value = reduceMotion ? 0 : t;
-        camera.position.x += (target.x * 0.9 - camera.position.x) * 0.04;
-        camera.position.y += (4.2 - target.y * 0.6 - camera.position.y) * 0.04;
-        camera.lookAt(0, 0, 0);
-        renderer.render(scene, camera);
-        if (visible && !reduceMotion) rafId = requestAnimationFrame(tick);
-      }
-      tick();
-      if (reduceMotion) renderer.render(scene, camera);
-
-      document.addEventListener('visibilitychange', () => {
-        visible = document.visibilityState === 'visible';
-        if (visible && !reduceMotion) {
-          cancelAnimationFrame(rafId);
-          rafId = requestAnimationFrame(tick);
-        }
-      });
-
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
-        material.uniforms.uPixelRatio.value = renderer.getPixelRatio();
-      });
-    }
-
-    /* ---------------- GSAP choreography ---------------- */
-    function splitChars(el: Element) {
-      const text = el.textContent ?? '';
-      el.textContent = '';
-      const frag = document.createDocumentFragment();
-      for (const ch of text) {
-        const span = document.createElement('span');
-        span.textContent = ch;
-        span.style.display = 'inline-block';
-        span.style.willChange = 'transform';
-        frag.appendChild(span);
-      }
-      el.appendChild(frag);
-      return Array.from(el.children);
-    }
-
-    function initAnimations() {
-      if (reduceMotion) {
-        gsap.set('.hero-eyebrow, .hero-foot, .scroll-hint', { opacity: 1 });
-        return;
-      }
-
+    if (reduceMotion) {
+      gsap.set('.hero-eyebrow, .hero-foot, .scroll-hint', { opacity: 1 });
+    } else {
       // Hero intro
       const heroChars = Array.from(document.querySelectorAll('.hero-title [data-split]')).flatMap(splitChars);
       const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
@@ -1004,52 +640,5 @@ const skills = [
         scrollTrigger: { trigger: '.contact', start: 'top 70%' },
       });
     }
-
-    /* ---------------- cursor + magnetic ---------------- */
-    function initCursor() {
-      if (!finePointer || reduceMotion) return;
-      const cursor = document.querySelector('.cursor') as HTMLElement | null;
-      if (!cursor) return;
-      const setX = gsap.quickTo(cursor, 'x', { duration: 0.18, ease: 'power3.out' });
-      const setY = gsap.quickTo(cursor, 'y', { duration: 0.18, ease: 'power3.out' });
-      window.addEventListener('pointermove', (e) => {
-        setX(e.clientX);
-        setY(e.clientY);
-      }, { passive: true });
-      document.querySelectorAll('[data-hover]').forEach((el) => {
-        el.addEventListener('pointerenter', () => cursor.classList.add('is-hover'));
-        el.addEventListener('pointerleave', () => cursor.classList.remove('is-hover'));
-      });
-
-      document.querySelectorAll('[data-magnetic]').forEach((el) => {
-        const mx = gsap.quickTo(el, 'x', { duration: 0.4, ease: 'power3.out' });
-        const my = gsap.quickTo(el, 'y', { duration: 0.4, ease: 'power3.out' });
-        el.addEventListener('pointermove', (e) => {
-          const r = (el as HTMLElement).getBoundingClientRect();
-          mx(((e as PointerEvent).clientX - r.left - r.width / 2) * 0.18);
-          my(((e as PointerEvent).clientY - r.top - r.height / 2) * 0.3);
-        });
-        el.addEventListener('pointerleave', () => { mx(0); my(0); });
-      });
-    }
-
-    // Hide topbar on scroll down, reveal on scroll up, to keep it from
-    // sitting on top of section text mid-page.
-    function initTopbar() {
-      const bar = document.querySelector('.topbar');
-      if (!bar) return;
-      let lastY = window.scrollY;
-      window.addEventListener('scroll', () => {
-        const y = window.scrollY;
-        bar.classList.toggle('is-hidden', y > lastY && y > 120);
-        lastY = y;
-      }, { passive: true });
-    }
-
-    initGL();
-    initAnimations();
-    initCursor();
-    initTopbar();
   </script>
-</body>
-</html>
+</V2Layout>

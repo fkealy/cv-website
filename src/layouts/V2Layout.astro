@@ -1,0 +1,245 @@
+---
+// Shell for the v2 pages: dark theme, WebGL backdrop, grain, custom
+// cursor, and the auto-hiding topbar. Page-specific styles and GSAP
+// choreography live in the pages themselves.
+interface Props {
+  title?: string;
+  description?: string;
+  waveAmp?: number;
+}
+
+const {
+  title = 'Freddie Kealy',
+  description = 'Full-stack engineer and technical co-founder of Yotpoint. From superyachts to baby poop, I ship useful tools across the web.',
+  waveAmp = 1.0,
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/bee-favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#0a0a0e" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <title>{title}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "35fae063ae114a9cb2bee51bb088071c"}'></script>
+</head>
+<body data-wave-amp={waveAmp}>
+  <!-- WebGL backdrop -->
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Custom cursor (desktop, fine pointers only) -->
+  <div class="cursor" aria-hidden="true"><div class="cursor-dot"></div></div>
+
+  <header class="topbar">
+    <a class="brand" href="/v2" data-hover>FK<span class="brand-dot">.</span></a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="/v2#work" data-hover>Work</a>
+      <a href="/v2#about" class="topnav-secondary" data-hover>About</a>
+      <a href="/v2#experience" class="topnav-secondary" data-hover>Experience</a>
+      <a href="/v2/blog" data-hover>Blog</a>
+      <a href="/v2#contact" data-hover>Contact</a>
+    </nav>
+    <a class="topbar-cta" href="mailto:fkealy.dev@gmail.com" data-hover>fkealy.dev@gmail.com</a>
+  </header>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <style is:global>
+    :root {
+      --bg: #0a0a0e;
+      --bg-soft: #101018;
+      --ink: #f2efe8;
+      --ink-dim: #8d8a94;
+      --accent: #f5b942;
+      --line: rgba(242, 239, 232, 0.14);
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      font-family: var(--font-display);
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    ::selection { background: var(--accent); color: var(--bg); }
+
+    #gl {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .grain {
+      position: fixed;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: grain 7s steps(8) infinite;
+    }
+    @keyframes grain {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(-3%, 2%); }
+      50% { transform: translate(2%, -3%); }
+      75% { transform: translate(-2%, -2%); }
+    }
+
+    /* Cursor */
+    .cursor {
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+      pointer-events: none;
+      display: none;
+    }
+    .cursor-dot {
+      width: 14px; height: 14px;
+      margin: -7px 0 0 -7px;
+      border-radius: 50%;
+      background: var(--accent);
+      mix-blend-mode: difference;
+      transition: transform 0.25s ease;
+    }
+    .cursor.is-hover .cursor-dot { transform: scale(3.2); }
+    @media (pointer: fine) {
+      .cursor { display: block; }
+    }
+
+    /* Topbar */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.1rem clamp(1.25rem, 4vw, 3rem);
+      mix-blend-mode: difference;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .topbar.is-hidden { transform: translateY(-110%); }
+    .topbar a {
+      color: var(--ink);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .brand {
+      font-family: var(--font-display) !important;
+      font-weight: 700;
+      font-size: 1.15rem !important;
+      letter-spacing: 0 !important;
+    }
+    .brand-dot { color: var(--accent); }
+    .topnav { display: flex; gap: 1.6rem; }
+    .topnav a { opacity: 0.75; transition: opacity 0.2s; }
+    .topnav a:hover { opacity: 1; }
+    .topbar-cta { opacity: 0.75; }
+    .topbar-cta:hover { opacity: 1; }
+    @media (max-width: 760px) {
+      .topbar-cta { display: none; }
+      .topnav { gap: 1rem; }
+    }
+    /* Not enough room for five nav items on small phones; Work, Blog and
+       Contact cover it. */
+    @media (max-width: 480px) {
+      .topnav-secondary { display: none; }
+    }
+
+    main { position: relative; z-index: 2; }
+
+    section {
+      padding: clamp(4.5rem, 10vw, 9rem) clamp(1.25rem, 4vw, 3rem);
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    /* Section heads */
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: clamp(2rem, 5vw, 4rem);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 1.2rem;
+    }
+    .section-title {
+      font-size: clamp(1.9rem, 5vw, 3.6rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .section-count {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-size: clamp(0.8rem, 1.6vw, 1rem);
+    }
+
+    .ghost-link {
+      display: inline-block;
+      margin-top: 2.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--ink-dim);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      padding: 0.9rem 1.6rem;
+      transition: color 0.25s, border-color 0.25s;
+    }
+    .ghost-link:hover { color: var(--accent); border-color: var(--accent); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .grain { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+
+  <script>
+    import { initGL, initCursor, initTopbar } from '../scripts/v2';
+
+    initGL({
+      amp: Number(document.body.dataset.waveAmp || 1),
+      calmOnScroll: '.hero',
+    });
+    initCursor();
+    initTopbar();
+  </script>
+</body>
+</html>
