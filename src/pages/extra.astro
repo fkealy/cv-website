@@ -1,0 +1,213 @@
+---
+import V2Layout from '../layouts/V2Layout.astro';
+import { extraProjects as projects } from '../data/projects';
+---
+
+<V2Layout
+  title="Extra — Freddie Kealy"
+  description="Side projects I never finished. They run, but they're rough."
+  waveAmp={0.45}
+>
+  <section class="extra-hero">
+    <p class="extra-eyebrow"><span class="eyebrow-line"></span>Off the main list</p>
+    <h1 class="extra-title">
+      <span class="line"><span class="word" data-split>EXTRA</span></span>
+    </h1>
+    <p class="extra-sub">
+      Things I built for the fun of it and never finished. They run, but expect rough edges.
+    </p>
+  </section>
+
+  <section class="extra-work">
+    <div class="section-head">
+      <h2 class="section-title" data-reveal>Side projects</h2>
+      <p class="section-count">({projects.length})</p>
+    </div>
+    <ul class="work-list">
+      {projects.map((p, i) => (
+        <li class="work-row" data-row>
+          <a
+            class="work-link"
+            href={p.link ?? undefined}
+            target={p.link ? '_blank' : undefined}
+            rel={p.link ? 'noopener noreferrer' : undefined}
+            data-hover
+          >
+            <span class="work-index">0{i + 1}</span>
+            <span class="work-main">
+              <span class="work-title">{p.title}</span>
+              <span class="work-blurb">{p.blurb}</span>
+            </span>
+            <span class="work-side">
+              <span class="work-tags">{p.tags.join(' · ')}</span>
+              <span class="work-year">{p.year}{p.link ? '' : ' · offline'}</span>
+            </span>
+            <span class="work-arrow" aria-hidden="true">{p.link ? '↗' : '✕'}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <a class="ghost-link" href="/" data-hover>← Back home</a>
+  </section>
+
+  <style is:global>
+    .extra-hero {
+      min-height: 52svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 8rem;
+      padding-bottom: clamp(2rem, 4vw, 3.5rem);
+    }
+    .extra-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-family: var(--font-mono);
+      font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      margin-bottom: clamp(1rem, 3vw, 2rem);
+      opacity: 0;
+    }
+    .eyebrow-line {
+      display: inline-block;
+      width: 3rem;
+      height: 1px;
+      background: var(--accent);
+    }
+    .extra-title {
+      font-weight: 600;
+      font-size: clamp(3.4rem, 13vw, 11.5rem);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+    }
+    .extra-title .line { display: block; overflow: hidden; }
+    .word { display: inline-block; }
+    .extra-sub {
+      margin-top: clamp(1.2rem, 3vw, 2rem);
+      font-size: clamp(1rem, 2.2vw, 1.4rem);
+      color: var(--ink-dim);
+      max-width: 40ch;
+      opacity: 0;
+    }
+
+    .extra-work { padding-top: 0; }
+
+    /* Work list (same treatment as the front page) */
+    .work-list { list-style: none; }
+    .work-row { border-bottom: 1px solid var(--line); }
+    .work-link {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: clamp(1rem, 3vw, 2.5rem);
+      padding: clamp(1.4rem, 3vw, 2.2rem) 0.5rem;
+      color: var(--ink);
+      text-decoration: none;
+      position: relative;
+      transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .work-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(245, 185, 66, 0.09), transparent 65%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+    @media (hover: hover) {
+      .work-link:hover { padding-left: 1.6rem; }
+      .work-link:hover::before { opacity: 1; }
+      .work-link:hover .work-title { color: var(--accent); }
+      .work-link:hover .work-arrow { transform: translate(4px, -4px); color: var(--accent); }
+    }
+    .work-index {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--ink-dim);
+    }
+    .work-title {
+      display: block;
+      font-size: clamp(1.5rem, 4.5vw, 3.2rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+    .work-blurb {
+      display: block;
+      margin-top: 0.4rem;
+      color: var(--ink-dim);
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      max-width: 52ch;
+      line-height: 1.5;
+    }
+    .work-side {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-dim);
+      line-height: 1.9;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      flex-direction: column;
+    }
+    .work-arrow {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    @media (max-width: 700px) {
+      .work-link { grid-template-columns: auto 1fr auto; }
+      .work-side { display: none; }
+    }
+  </style>
+
+  <script>
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import { reduceMotion, splitChars } from '../scripts/v2';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (reduceMotion) {
+      gsap.set('.extra-eyebrow, .extra-sub', { opacity: 1 });
+    } else {
+      const chars = Array.from(document.querySelectorAll('.extra-title [data-split]')).flatMap(splitChars);
+      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+      tl.from(chars, { yPercent: 115, rotate: 4, duration: 1.1, stagger: 0.04, delay: 0.15 })
+        .to('.extra-eyebrow', { opacity: 1, duration: 0.7 }, '-=0.7')
+        .to('.extra-sub', { opacity: 1, duration: 0.7 }, '-=0.45');
+
+      // Keep the header visible if rAF stalls before the timeline finishes.
+      setTimeout(() => {
+        if (tl.progress() < 1) tl.progress(1);
+      }, 3500);
+
+      document.querySelectorAll('[data-reveal]').forEach((el) => {
+        gsap.from(el, {
+          y: 50,
+          opacity: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%' },
+        });
+      });
+
+      document.querySelectorAll('[data-row]').forEach((el) => {
+        gsap.from(el, {
+          y: 60,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 92%' },
+        });
+      });
+    }
+  </script>
+</V2Layout>
