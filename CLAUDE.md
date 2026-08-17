@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal CV/portfolio website for Freddie Kealy, built with Astro 5, showcasing projects, work experience, and blog posts. Dark, animation-heavy design (GSAP + three.js), deployed to Cloudflare Pages.
+Website for fkealy, Freddie Kealy's AI-forward software & web agency, built with Astro 5: selected work with expanding case panels, a concepts page, a blog, and a quiet /cv page. Dark, animation-heavy design (GSAP + three.js), deployed to Cloudflare Pages. Positioning and copy rules live in the brand-voice skill and auto-memory — keep the homepage lean (hero → work → about → contact, no services section).
 
 ## Tech Stack
 
@@ -57,7 +57,7 @@ Blog posts are managed via Astro Content Collections:
 ### Static Assets
 
 Located in `public/`:
-- `CV/`: PDF versions of CV
+- `files/`: PDF versions of the CV (named `files/`, not `CV/` — Cloudflare Pages matches paths case-insensitively, so a `CV/` directory shadows the `/cv` route)
 - `flappy-bee/`: HTML5 game
 - `assets/`: Images and other static resources
 - `bee-favicon.svg`: Site favicon
