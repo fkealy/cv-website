@@ -1,12 +1,18 @@
 // Shared project list. `extra: true` keeps a project off the front page and
-// puts it on /extra instead — the hobby builds that aren't finished.
+// puts it on /concepts instead — ideas still being tested.
+// Projects with a `slug` + `story` get the expanding panel on the front page;
+// screenshots live at /assets/work/{slug}-desktop.jpeg and {slug}-mobile.jpeg.
 export interface Project {
   title: string;
   year: string;
   blurb: string;
   link?: string;
   tags: string[];
+  /** Where it runs — shown on the front-page work rows instead of the tech tags. */
+  deploy?: string;
   extra?: boolean;
+  slug?: string;
+  story?: string;
 }
 
 export const projects: Project[] = [
@@ -16,6 +22,9 @@ export const projects: Project[] = [
     blurb: 'Swipe to match on group decisions: baby names, where to do your stag do, the best place to eat when you get there. Everyone swipes and it surfaces what you all agree on.',
     link: 'https://getagreed.app',
     tags: ['three.js', 'GSAP', 'Vite', 'Cloudflare'],
+    deploy: 'Runs on Cloudflare',
+    slug: 'agreed',
+    story: 'Everyone swipes on their own phone and the app finds the overlap. No arguing, no spreadsheet. Vite and three.js doing the theatrics, Cloudflare doing the serving.',
   },
   {
     title: 'Death House',
@@ -31,13 +40,19 @@ export const projects: Project[] = [
     blurb: 'A gym session planner that tracks lifting and running in one place. AI program generation, launching soon.',
     link: 'https://doggins.app',
     tags: ['AI', 'Fitness'],
+    extra: true,
+    slug: 'doggins',
+    story: 'Lifting and running in one plan, instead of 2 apps that ignore each other. AI writes the programme, the tracker keeps you honest. In beta now, launching soon.',
   },
   {
     title: 'Yotpoint',
     year: '2024',
-    blurb: 'A marketplace connecting superyacht crews with vetted service providers. Co-founding it now.',
+    blurb: 'A marketplace where superyacht crews find vetted service providers. Ours, built from scratch.',
     link: 'https://yotpoint.com',
     tags: ['Next.js', 'AWS Lambda', 'DynamoDB'],
+    deploy: 'Runs on AWS',
+    slug: 'yotpoint',
+    story: 'The practice’s own marketplace. Next.js up front, Node and Lambda behind, DynamoDB underneath. New features ship without breaking what’s already live.',
   },
   {
     title: 'Emotional Scripture',
@@ -45,6 +60,9 @@ export const projects: Project[] = [
     blurb: 'A small web app that maps emotions to scripture across religions.',
     link: 'https://emotionalscripture.pages.dev/',
     tags: ['Vue', 'Cloudflare Pages'],
+    deploy: 'Runs on Cloudflare',
+    slug: 'emotional-scripture',
+    story: 'Pick how you feel, get scripture that meets you there, across several religions. A small Vue app on Cloudflare Pages. Costs nothing to run.',
   },
   {
     title: 'Latch Log',
@@ -60,6 +78,9 @@ export const projects: Project[] = [
     blurb: 'Booking site and owner dashboard for a holiday home in the south of France.',
     link: 'https://www.villalamole.com',
     tags: ['Vue', 'React', 'Convex'],
+    deploy: 'Runs on Convex',
+    slug: 'villa-la-mole',
+    story: 'A holiday home that needed bookings without the agency fees. A site for guests, a dashboard for the owner, Convex keeping the calendar straight.',
   },
 ];
 

@@ -1,58 +1,19 @@
 ---
 import V2Layout from '../layouts/V2Layout.astro';
 import { featuredProjects as projects } from '../data/projects';
-
-const experience = [
-  {
-    period: '2024 — now',
-    company: 'Yotpoint',
-    role: 'Technical Co-Founder',
-    note: 'Building the product end to end: Next.js front, Node and AWS behind it.',
-  },
-  {
-    period: '2023 — 24',
-    company: 'Sabbatical',
-    role: 'Product & business',
-    note: 'MBA essentials at LSE, a product course at Barclays Eagle Labs, side projects.',
-  },
-  {
-    period: '2020 — 23',
-    company: 'Glofox',
-    role: 'Product Engineer',
-    note: 'Resolved 50+ P1s during COVID, then led the redesign of core services off the legacy monolith.',
-  },
-  {
-    period: '2018 — 20',
-    company: 'CGI',
-    role: 'Technical Consultant',
-    note: 'UK government infrastructure. Spring Boot on AWS, REST APIs, internal tooling.',
-  },
-  {
-    period: '2015 — 18',
-    company: 'Gamesys',
-    role: 'Graduate Engineer',
-    note: 'Real-time event pipelines, payments, data migrations. First time shipping to millions.',
-  },
-];
-
-const skills = [
-  'Next.js', 'React', 'Vue', 'Node.js', 'TypeScript', 'Tailwind',
-  'AWS Lambda', 'DynamoDB', 'Convex', 'Cloudflare', 'GCP', 'Docker',
-];
 ---
 
 <V2Layout>
   <!-- HERO -->
   <section class="hero" id="top">
-    <p class="hero-eyebrow"><span class="eyebrow-line"></span>Technical co-founder, Yotpoint</p>
-    <h1 class="hero-title" aria-label="Freddie Kealy">
-      <span class="line"><span class="word" data-split>FREDDIE</span></span>
-      <span class="line line-indent"><span class="word word-accent" data-split>KEALY</span></span>
+    <p class="hero-eyebrow"><span class="eyebrow-line"></span>An AI-forward agency for software &amp; websites</p>
+    <h1 class="hero-title" aria-label="fkealy">
+      <span class="line"><span class="word" data-split>fkealy</span><span class="hero-dot">.</span></span>
     </h1>
     <div class="hero-foot">
-      <p class="hero-tagline">From superyachts to baby poop,<br />I ship useful tools across the web.</p>
+      <p class="hero-tagline">From first idea to launched product.<br />Built to work, and keep working.</p>
       <div class="hero-meta">
-        <p>Full-stack engineer</p>
+        <p>Design + engineering</p>
         <p>UK / remote</p>
       </div>
     </div>
@@ -69,7 +30,7 @@ const skills = [
     <div class="marquee-track">
       {Array.from({ length: 2 }).map(() => (
         <span class="marquee-chunk">
-          Founder <i>✦</i> Product builder <i>✦</i> Full-stack <i>✦</i> Next.js <i>✦</i> AWS <i>✦</i>&nbsp;
+          AI-forward <i>✦</i> Idea to delivery <i>✦</i> Websites <i>✦</i> Products <i>✦</i> No drama at the back <i>✦</i> UK / Remote <i>✦</i>&nbsp;
         </span>
       ))}
     </div>
@@ -83,12 +44,12 @@ const skills = [
     </div>
     <ul class="work-list">
       {projects.map((p, i) => (
-        <li class="work-row" data-row>
-          <a
-            class="work-link"
-            href={p.link ?? undefined}
-            target={p.link ? '_blank' : undefined}
-            rel={p.link ? 'noopener noreferrer' : undefined}
+        <li class="work-row" data-row id={p.slug}>
+          <button
+            class="work-link work-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls={`panel-${p.slug}`}
             data-hover
           >
             <span class="work-index">0{i + 1}</span>
@@ -97,20 +58,48 @@ const skills = [
               <span class="work-blurb">{p.blurb}</span>
             </span>
             <span class="work-side">
-              <span class="work-tags">{p.tags.join(' · ')}</span>
-              <span class="work-year">{p.year}{p.link ? '' : ' · offline'}</span>
+              {p.deploy && <span class="work-tags">{p.deploy}</span>}
             </span>
-            <span class="work-arrow" aria-hidden="true">{p.link ? '↗' : '✕'}</span>
-          </a>
+            <span class="work-arrow" aria-hidden="true">+</span>
+          </button>
+          <div class="work-panel" id={`panel-${p.slug}`}>
+            <div class="work-panel-inner">
+              <div class="work-shots">
+                <img
+                  src={`/assets/work/${p.slug}-desktop.jpeg`}
+                  alt={`${p.title} on desktop`}
+                  loading="lazy"
+                  class="shot-desktop"
+                />
+                <img
+                  src={`/assets/work/${p.slug}-mobile.jpeg`}
+                  alt={`${p.title} on a phone`}
+                  loading="lazy"
+                  class="shot-mobile"
+                />
+              </div>
+              <div class="work-panel-text">
+                <p class="work-story">{p.story}</p>
+                {p.link && (
+                  <a
+                    class="ghost-link work-live"
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-hover
+                  >
+                    See it live ↗
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
         </li>
       ))}
     </ul>
     <div class="ghost-row">
-      <a class="ghost-link" href="https://github.com/fkealy" target="_blank" rel="noopener noreferrer" data-hover>
-        More on GitHub ↗
-      </a>
-      <a class="ghost-link" href="/extra" data-hover>
-        Half-built things →
+      <a class="ghost-link" href="/concepts" data-hover>
+        Concepts →
       </a>
     </div>
   </section>
@@ -118,51 +107,26 @@ const skills = [
   <!-- ABOUT / STATEMENT -->
   <section class="about" id="about">
     <p class="statement">
-      <span class="statement-line">I've spent ten years building software,</span>
-      <span class="statement-line">from government infrastructure to gym SaaS</span>
-      <span class="statement-line">to a marketplace I'm co-founding now.</span>
-      <span class="statement-line statement-accent">I like small teams and shipped products.</span>
+      <span class="statement-line">AI makes building fast.</span>
+      <span class="statement-line">10 years of fundamentals keep it right.</span>
+      <span class="statement-line">We use both, and read every line.</span>
+      <span class="statement-line statement-accent">So a small hallucination doesn't cost you your business.</span>
     </p>
-    <div class="skills-strip" aria-label="Tech stack">
-      {skills.map((s) => <span class="skill-chip" data-chip>{s}</span>)}
-    </div>
-  </section>
-
-  <!-- EXPERIENCE -->
-  <section class="exp" id="experience">
-    <div class="section-head">
-      <h2 class="section-title" data-reveal>Experience</h2>
-      <p class="section-count">(10 yrs)</p>
-    </div>
-    <div class="exp-timeline">
-      <div class="exp-progress" aria-hidden="true"></div>
-      <ol class="exp-list">
-        {experience.map((e) => (
-          <li class="exp-item" data-row>
-            <div class="exp-period">{e.period}</div>
-            <div class="exp-body">
-              <h3 class="exp-company">{e.company}</h3>
-              <p class="exp-role">{e.role}</p>
-              <p class="exp-note">{e.note}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-    </div>
   </section>
 
   <!-- CONTACT -->
   <section class="contact" id="contact">
     <p class="contact-kicker" data-reveal>Got something to build?</p>
-    <a class="contact-big" href="mailto:fkealy.dev@gmail.com" data-hover data-magnetic>
-      <span class="word" data-split>SAY&nbsp;HELLO</span>
+    <a class="contact-big" href="mailto:fkealy.dev@gmail.com?subject=Project%20enquiry" data-hover data-magnetic>
+      <span class="word" data-split>START&nbsp;A&nbsp;PROJECT</span>
     </a>
     <div class="contact-links">
       <a href="https://github.com/fkealy" target="_blank" rel="noopener noreferrer" data-hover>GitHub</a>
       <a href="https://www.linkedin.com/in/freddie-kealy-140b05b5/" target="_blank" rel="noopener noreferrer" data-hover>LinkedIn</a>
       <a href="/blog" data-hover>Blog</a>
+      <a href="/cv" data-hover>CV</a>
     </div>
-    <p class="contact-foot">© {new Date().getFullYear()} Freddie Kealy · Built with Astro, GSAP & three.js</p>
+    <p class="contact-foot">© {new Date().getFullYear()} fkealy · Built with Astro, GSAP & three.js</p>
   </section>
 
   <style is:global>
@@ -195,20 +159,16 @@ const skills = [
     }
     .hero-title {
       font-weight: 600;
-      font-size: clamp(3.4rem, 14.5vw, 13.5rem);
-      line-height: 0.92;
-      letter-spacing: -0.03em;
-      text-transform: uppercase;
+      font-size: clamp(3.8rem, 17vw, 15rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      text-transform: none;
     }
     .hero-title .line { display: block; overflow: hidden; }
-    .line-indent { padding-left: clamp(2rem, 10vw, 12rem); }
     .word { display: inline-block; }
-    .word-accent {
-      color: transparent;
-      -webkit-text-stroke: 2px var(--accent);
-    }
-    @media (max-width: 600px) {
-      .word-accent { -webkit-text-stroke: 1.2px var(--accent); }
+    .hero-dot {
+      display: inline-block;
+      color: var(--accent);
     }
     .hero-foot {
       display: flex;
@@ -269,7 +229,8 @@ const skills = [
     .marquee-track {
       display: flex;
       width: max-content;
-      animation: marquee 28s linear infinite;
+      /* Slow drift, not a ticker: the page stays calm. */
+      animation: marquee 75s linear infinite;
     }
     .marquee-chunk {
       font-family: var(--font-mono);
@@ -281,7 +242,7 @@ const skills = [
     }
     .marquee-chunk i {
       font-style: normal;
-      color: var(--accent);
+      color: var(--ink-dim);
       padding: 0 1.2rem;
     }
     @keyframes marquee {
@@ -291,6 +252,14 @@ const skills = [
     /* Work list */
     .work-list { list-style: none; }
     .work-row { border-bottom: 1px solid var(--line); }
+    .work-toggle {
+      width: 100%;
+      background: none;
+      border: none;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
     .work-link {
       display: grid;
       grid-template-columns: auto 1fr auto auto;
@@ -349,11 +318,73 @@ const skills = [
     }
     .work-arrow {
       font-size: clamp(1.2rem, 3vw, 1.8rem);
-      transition: transform 0.3s ease, color 0.3s ease;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s ease;
+    }
+    .work-row.is-open .work-arrow {
+      transform: rotate(45deg);
+      color: var(--accent);
+    }
+    @media (hover: hover) {
+      .work-row.is-open .work-link:hover .work-arrow { transform: rotate(45deg); }
     }
     @media (max-width: 700px) {
       .work-link { grid-template-columns: auto 1fr auto; }
       .work-side { display: none; }
+    }
+
+    /* Expanding panel: first click gets the story, second gets the live site */
+    .work-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .work-row.is-open .work-panel { grid-template-rows: 1fr; }
+    .work-panel-inner {
+      overflow: hidden;
+      min-height: 0;
+    }
+    .work-shots {
+      display: flex;
+      gap: clamp(0.8rem, 2vw, 1.4rem);
+      align-items: flex-start;
+      padding-top: 0.5rem;
+    }
+    .work-shots img {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      display: block;
+      height: auto;
+    }
+    .shot-desktop {
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: 720px;
+    }
+    .shot-mobile {
+      flex: 0 0 clamp(90px, 18vw, 200px);
+      max-width: 200px;
+    }
+    .work-panel-text {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: clamp(1rem, 3vw, 2.5rem);
+      flex-wrap: wrap;
+      padding-bottom: clamp(1.4rem, 3vw, 2.2rem);
+    }
+    .work-story {
+      color: var(--ink-dim);
+      line-height: 1.6;
+      max-width: 58ch;
+      font-size: clamp(0.9rem, 1.9vw, 1.05rem);
+      margin-top: clamp(1rem, 2.5vw, 1.6rem);
+    }
+    .work-live { margin-top: clamp(1rem, 2.5vw, 1.6rem); }
+    @media (max-width: 700px) {
+      .shot-mobile { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .work-panel, .work-arrow { transition: none !important; }
     }
     .ghost-row {
       display: flex;
@@ -372,78 +403,6 @@ const skills = [
     }
     .statement-line { display: block; }
     .statement-accent { color: var(--accent); }
-    .skills-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: clamp(2.5rem, 6vw, 4.5rem);
-    }
-    .skill-chip {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--ink-dim);
-      border: 1px solid var(--line);
-      padding: 0.55rem 0.95rem;
-      border-radius: 99px;
-      transition: color 0.25s, border-color 0.25s;
-    }
-    .skill-chip:hover { color: var(--accent); border-color: var(--accent); }
-
-    /* Experience */
-    .exp-timeline { position: relative; padding-left: clamp(1.4rem, 4vw, 3rem); }
-    .exp-progress {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--line);
-      overflow: hidden;
-    }
-    .exp-progress::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--accent);
-      transform: scaleY(var(--p, 0));
-      transform-origin: top;
-    }
-    .exp-list { list-style: none; }
-    .exp-item {
-      display: grid;
-      grid-template-columns: minmax(7.5rem, 11rem) 1fr;
-      gap: clamp(1rem, 3vw, 2.5rem);
-      padding: clamp(1.4rem, 3vw, 2rem) 0;
-      border-bottom: 1px solid var(--line);
-    }
-    .exp-item:last-child { border-bottom: none; }
-    .exp-period {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--accent);
-      letter-spacing: 0.08em;
-      padding-top: 0.45rem;
-    }
-    .exp-company {
-      font-size: clamp(1.3rem, 3.2vw, 2rem);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: -0.01em;
-    }
-    .exp-role {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--ink-dim);
-      margin: 0.3rem 0 0.7rem;
-    }
-    .exp-note { color: var(--ink-dim); line-height: 1.6; max-width: 60ch; }
-    @media (max-width: 600px) {
-      .exp-item { grid-template-columns: 1fr; gap: 0.4rem; }
-    }
 
     /* Contact */
     .contact {
@@ -460,7 +419,7 @@ const skills = [
     }
     .contact-big {
       display: inline-block;
-      font-size: clamp(3rem, 13vw, 11rem);
+      font-size: clamp(2.2rem, 9.5vw, 8.5rem);
       font-weight: 600;
       letter-spacing: -0.03em;
       color: transparent;
@@ -517,6 +476,26 @@ const skills = [
 
     gsap.registerPlugin(ScrollTrigger);
 
+    // Work rows: first click opens the panel; the live link sits inside it.
+    // One panel open at a time.
+    document.querySelectorAll('.work-toggle').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('.work-row');
+        if (!row) return;
+        const wasOpen = row.classList.contains('is-open');
+        document.querySelectorAll('.work-row.is-open').forEach((r) => {
+          r.classList.remove('is-open');
+          r.querySelector('.work-toggle')?.setAttribute('aria-expanded', 'false');
+        });
+        if (!wasOpen) {
+          row.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+        // The page height changes under the scroll triggers.
+        setTimeout(() => ScrollTrigger.refresh(), 600);
+      });
+    });
+
     if (reduceMotion) {
       gsap.set('.hero-eyebrow, .hero-foot, .scroll-hint', { opacity: 1 });
     } else {
@@ -530,6 +509,7 @@ const skills = [
         stagger: 0.035,
         delay: 0.15,
       })
+        .from('.hero-dot', { yPercent: 115, duration: 0.7 }, '-=0.6')
         .to('.hero-eyebrow', { opacity: 1, duration: 0.7 }, '-=0.7')
         .to('.hero-foot', { opacity: 1, duration: 0.7 }, '-=0.45')
         .to('.scroll-hint', { opacity: 1, duration: 0.7 }, '-=0.4');
@@ -559,48 +539,26 @@ const skills = [
         });
       });
 
-      // Row reveals (work + experience)
+      // Row reveals — kept gentle so the section titles carry the energy
       document.querySelectorAll('[data-row]').forEach((el) => {
         gsap.from(el, {
-          y: 60,
+          y: 24,
           opacity: 0,
-          duration: 0.8,
-          ease: 'power3.out',
+          duration: 1,
+          ease: 'power2.out',
           scrollTrigger: { trigger: el, start: 'top 92%' },
         });
       });
 
       // Statement lines
       gsap.from('.statement-line', {
-        y: 40,
+        y: 18,
         opacity: 0,
-        duration: 0.8,
+        duration: 1,
         stagger: 0.12,
-        ease: 'power3.out',
+        ease: 'power2.out',
         scrollTrigger: { trigger: '.statement', start: 'top 80%' },
       });
-
-      // Skill chips pop
-      gsap.from('[data-chip]', {
-        scale: 0.6,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.04,
-        ease: 'back.out(2)',
-        scrollTrigger: { trigger: '.skills-strip', start: 'top 90%' },
-      });
-
-      // Experience progress line scrub
-      const progress = document.querySelector('.exp-progress') as HTMLElement | null;
-      if (progress) {
-        ScrollTrigger.create({
-          trigger: '.exp-timeline',
-          start: 'top 75%',
-          end: 'bottom 55%',
-          scrub: 0.5,
-          onUpdate: (self) => progress.style.setProperty('--p', String(self.progress)),
-        });
-      }
 
       // Contact big-type reveal
       const contactChars = Array.from(document.querySelectorAll('.contact-big [data-split]')).flatMap(splitChars);

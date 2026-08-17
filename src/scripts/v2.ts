@@ -57,11 +57,15 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
       uTime: { value: 0 },
       uAmp: { value: amp },
       uPixelRatio: { value: renderer.getPixelRatio() },
+      uPointer: { value: new THREE.Vector2(999, 999) },
+      uPointerStrength: { value: 0 },
     },
     vertexShader: /* glsl */ `
       uniform float uTime;
       uniform float uAmp;
       uniform float uPixelRatio;
+      uniform vec2 uPointer;
+      uniform float uPointerStrength;
       attribute float aSeed;
       varying float vElev;
       varying float vSeed;
@@ -71,6 +75,11 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
         float wave2 = sin(p.x * 0.18 - uTime * 0.35) * 1.6;
         float wave3 = sin((p.x + p.z) * 0.9 + uTime * 1.1) * 0.18;
         p.y = (wave1 * 0.55 + wave2 * 0.35 + wave3) * uAmp;
+        // Swell that follows the cursor; fades with uAmp so it goes quiet
+        // along with the rest of the wave once you scroll.
+        float pd = distance(p.xz, uPointer);
+        float swell = exp(-pd * pd * 0.10) * (0.9 + 0.35 * sin(pd * 2.2 - uTime * 2.4));
+        p.y += swell * uPointerStrength * uAmp;
         vElev = p.y;
         vSeed = aSeed;
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
@@ -97,12 +106,24 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
   const points = new THREE.Points(geometry, material);
   scene.add(points);
 
-  // Mouse parallax
+  // Mouse parallax + cursor swell target (raycast onto the wave plane)
   const target = { x: 0, y: 0 };
+  const pointerTarget = new THREE.Vector3(999, 0, 999);
+  let pointerSeen = false;
+  const raycaster = new THREE.Raycaster();
+  const wavePlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  const ndc = new THREE.Vector2();
+  const hit = new THREE.Vector3();
   if (finePointer) {
     window.addEventListener('pointermove', (e) => {
       target.x = (e.clientX / window.innerWidth - 0.5) * 2;
       target.y = (e.clientY / window.innerHeight - 0.5) * 2;
+      ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
+      raycaster.setFromCamera(ndc, camera);
+      if (raycaster.ray.intersectPlane(wavePlane, hit)) {
+        pointerTarget.copy(hit);
+        pointerSeen = true;
+      }
     }, { passive: true });
   }
 
@@ -114,7 +135,8 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
       end: 'bottom top',
       scrub: true,
       onUpdate: (self) => {
-        material.uniforms.uAmp.value = amp * (1.0 - self.progress * 0.7);
+        // Nearly still once the hero is gone: impact on arrival, calm after.
+        material.uniforms.uAmp.value = amp * (1.0 - self.progress * 0.88);
         points.position.y = -self.progress * 2.5;
       },
     });
@@ -130,6 +152,11 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
     camera.position.x += (target.x * 0.9 - camera.position.x) * 0.04;
     camera.position.y += (4.2 - target.y * 0.6 - camera.position.y) * 0.04;
     camera.lookAt(0, 0, 0);
+    const up = material.uniforms.uPointer.value;
+    up.x += (pointerTarget.x - up.x) * 0.06;
+    up.y += (pointerTarget.z - up.y) * 0.06;
+    const strength = material.uniforms.uPointerStrength;
+    strength.value += ((pointerSeen ? 1 : 0) - strength.value) * 0.04;
     renderer.render(scene, camera);
     if (visible && !reduceMotion) rafId = requestAnimationFrame(tick);
   }

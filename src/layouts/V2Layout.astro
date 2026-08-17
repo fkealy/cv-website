@@ -9,8 +9,8 @@ interface Props {
 }
 
 const {
-  title = 'Freddie Kealy',
-  description = 'Full-stack engineer and technical co-founder of Yotpoint. From superyachts to baby poop, I ship useful tools across the web.',
+  title = 'fkealy — AI-forward software & web agency',
+  description = 'fkealy is an AI-forward agency building software and websites, from first idea to launched product. Built to work, and keep working.',
   waveAmp = 1.0,
 } = Astro.props;
 ---
@@ -43,11 +43,10 @@ const {
   <div class="cursor" aria-hidden="true"><div class="cursor-dot"></div></div>
 
   <header class="topbar">
-    <a class="brand" href="/" data-hover>FK<span class="brand-dot">.</span></a>
+    <a class="brand" href="/" data-hover>fkealy<span class="brand-dot">.</span></a>
     <nav class="topnav" aria-label="Primary">
       <a href="/#work" data-hover>Work</a>
       <a href="/#about" class="topnav-secondary" data-hover>About</a>
-      <a href="/#experience" class="topnav-secondary" data-hover>Experience</a>
       <a href="/blog" data-hover>Blog</a>
       <a href="/#contact" data-hover>Contact</a>
     </nav>
@@ -163,6 +162,8 @@ const {
       font-weight: 700;
       font-size: 1.15rem !important;
       letter-spacing: 0 !important;
+      /* The wordmark is lowercase; the topbar defaults everything to uppercase. */
+      text-transform: none !important;
     }
     .brand-dot { color: var(--accent); }
     .topnav { display: flex; gap: 1.6rem; }
@@ -206,7 +207,7 @@ const {
     }
     .section-count {
       font-family: var(--font-mono);
-      color: var(--accent);
+      color: var(--ink-dim);
       font-size: clamp(0.8rem, 1.6vw, 1rem);
     }
 

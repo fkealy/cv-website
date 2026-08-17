@@ -1,0 +1,274 @@
+---
+import V2Layout from '../layouts/V2Layout.astro';
+
+const experience = [
+  {
+    period: '2024 — now',
+    company: 'Yotpoint',
+    role: 'Technical Co-Founder',
+    note: 'Building the product end to end: Next.js front, Node and AWS behind it.',
+  },
+  {
+    period: '2023 — 24',
+    company: 'Sabbatical',
+    role: 'Product & business',
+    note: 'MBA essentials at LSE, a product course at Barclays Eagle Labs, side projects.',
+  },
+  {
+    period: '2020 — 23',
+    company: 'Glofox',
+    role: 'Product Engineer',
+    note: 'Resolved 50+ P1s during COVID, then led the redesign of core services off the legacy monolith.',
+  },
+  {
+    period: '2018 — 20',
+    company: 'CGI',
+    role: 'Technical Consultant',
+    note: 'UK government infrastructure. Spring Boot on AWS, REST APIs, internal tooling.',
+  },
+  {
+    period: '2015 — 18',
+    company: 'Gamesys',
+    role: 'Graduate Engineer',
+    note: 'Real-time event pipelines, payments, data migrations. First time shipping to millions.',
+  },
+];
+---
+
+<V2Layout
+  title="CV — Freddie Kealy"
+  description="The full CV of Freddie Kealy, the engineer behind fkealy. 10 years across government infrastructure, SaaS, and a marketplace of his own."
+  waveAmp={0.45}
+>
+  <section class="cv-hero">
+    <p class="cv-eyebrow"><span class="eyebrow-line"></span>The person behind the practice</p>
+    <h1 class="cv-title">
+      <span class="line"><span class="word" data-split>FREDDIE</span></span>
+      <span class="line line-indent"><span class="word word-accent" data-split>KEALY</span></span>
+    </h1>
+    <p class="cv-sub">
+      10 years as a software engineer, now running fkealy. This page is the
+      paperwork, kept around for recruiters and anyone doing their homework.
+    </p>
+    <div class="ghost-row">
+      <a class="ghost-link" href="/CV/FreddieKealyCV.pdf" target="_blank" rel="noopener noreferrer" data-hover>
+        Download PDF ↗
+      </a>
+      <a class="ghost-link" href="/" data-hover>← Back to the practice</a>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="exp" id="experience">
+    <div class="section-head">
+      <h2 class="section-title" data-reveal>Experience</h2>
+      <p class="section-count">(10 yrs)</p>
+    </div>
+    <div class="exp-timeline">
+      <div class="exp-progress" aria-hidden="true"></div>
+      <ol class="exp-list">
+        {experience.map((e) => (
+          <li class="exp-item" data-row>
+            <div class="exp-period">{e.period}</div>
+            <div class="exp-body">
+              <h3 class="exp-company">{e.company}</h3>
+              <p class="exp-role">{e.role}</p>
+              <p class="exp-note">{e.note}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="cv-contact">
+    <p class="cv-contact-note">
+      Hiring, or just checking references?
+      <a href="mailto:fkealy.dev@gmail.com" data-hover>fkealy.dev@gmail.com</a>
+    </p>
+  </section>
+
+  <style is:global>
+    .cv-hero {
+      min-height: 60svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 7rem;
+    }
+    .cv-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-family: var(--font-mono);
+      font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      margin-bottom: clamp(1rem, 3vw, 2rem);
+    }
+    .eyebrow-line {
+      display: inline-block;
+      width: 3rem;
+      height: 1px;
+      background: var(--accent);
+    }
+    .cv-title {
+      font-weight: 600;
+      font-size: clamp(2.8rem, 11vw, 10rem);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+    }
+    .cv-title .line { display: block; overflow: hidden; }
+    .line-indent { padding-left: clamp(1.5rem, 8vw, 9rem); }
+    .word { display: inline-block; }
+    .word-accent {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--accent);
+    }
+    @media (max-width: 600px) {
+      .word-accent { -webkit-text-stroke: 1.2px var(--accent); }
+    }
+    .cv-sub {
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+      color: var(--ink-dim);
+      line-height: 1.6;
+      max-width: 52ch;
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+    }
+    .cv-hero .ghost-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    /* Experience */
+    .exp-timeline { position: relative; padding-left: clamp(1.4rem, 4vw, 3rem); }
+    .exp-progress {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--line);
+      overflow: hidden;
+    }
+    .exp-progress::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: scaleY(var(--p, 0));
+      transform-origin: top;
+    }
+    .exp-list { list-style: none; }
+    .exp-item {
+      display: grid;
+      grid-template-columns: minmax(7.5rem, 11rem) 1fr;
+      gap: clamp(1rem, 3vw, 2.5rem);
+      padding: clamp(1.4rem, 3vw, 2rem) 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .exp-item:last-child { border-bottom: none; }
+    .exp-period {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      padding-top: 0.45rem;
+    }
+    .exp-company {
+      font-size: clamp(1.3rem, 3.2vw, 2rem);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+    .exp-role {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-dim);
+      margin: 0.3rem 0 0.7rem;
+    }
+    .exp-note { color: var(--ink-dim); line-height: 1.6; max-width: 60ch; }
+    @media (max-width: 600px) {
+      .exp-item { grid-template-columns: 1fr; gap: 0.4rem; }
+    }
+
+    .cv-contact { padding-top: 0; }
+    .cv-contact-note {
+      font-family: var(--font-mono);
+      font-size: clamp(0.8rem, 1.7vw, 0.95rem);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-dim);
+      line-height: 2.2;
+    }
+    .cv-contact-note a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.2rem;
+      transition: color 0.25s, border-color 0.25s;
+    }
+    .cv-contact-note a:hover { color: var(--accent); border-color: var(--accent); }
+  </style>
+
+  <script>
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import { reduceMotion, splitChars } from '../scripts/v2';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (!reduceMotion) {
+      // Title intro
+      const chars = Array.from(document.querySelectorAll('.cv-title [data-split]')).flatMap(splitChars);
+      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+      tl.from(chars, {
+        yPercent: 115,
+        rotate: 4,
+        duration: 1.1,
+        stagger: 0.035,
+        delay: 0.15,
+      });
+      setTimeout(() => {
+        if (tl.progress() < 1) tl.progress(1);
+      }, 3500);
+
+      // Section title + row reveals
+      document.querySelectorAll('[data-reveal]').forEach((el) => {
+        gsap.from(el, {
+          y: 50,
+          opacity: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%' },
+        });
+      });
+      document.querySelectorAll('[data-row]').forEach((el) => {
+        gsap.from(el, {
+          y: 24,
+          opacity: 0,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 92%' },
+        });
+      });
+
+      // Experience progress line scrub
+      const progress = document.querySelector('.exp-progress') as HTMLElement | null;
+      if (progress) {
+        ScrollTrigger.create({
+          trigger: '.exp-timeline',
+          start: 'top 75%',
+          end: 'bottom 55%',
+          scrub: 0.5,
+          onUpdate: (self) => progress.style.setProperty('--p', String(self.progress)),
+        });
+      }
+    }
+  </script>
+</V2Layout>

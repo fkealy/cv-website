@@ -4,23 +4,23 @@ import { extraProjects as projects } from '../data/projects';
 ---
 
 <V2Layout
-  title="Extra — Freddie Kealy"
-  description="Side projects I never finished. They run, but they're rough."
+  title="Concepts — fkealy"
+  description="Concepts from the practice: ideas built far enough to test for real."
   waveAmp={0.45}
 >
   <section class="extra-hero">
-    <p class="extra-eyebrow"><span class="eyebrow-line"></span>Off the main list</p>
+    <p class="extra-eyebrow"><span class="eyebrow-line"></span>The test bench</p>
     <h1 class="extra-title">
-      <span class="line"><span class="word" data-split>EXTRA</span></span>
+      <span class="line"><span class="word" data-split>CONCEPTS</span></span>
     </h1>
     <p class="extra-sub">
-      Things I built for the fun of it and never finished. They run, but expect rough edges.
+      Ideas built far enough to test for real. The good ones graduate to the main list.
     </p>
   </section>
 
   <section class="extra-work">
     <div class="section-head">
-      <h2 class="section-title" data-reveal>Side projects</h2>
+      <h2 class="section-title" data-reveal>In progress</h2>
       <p class="section-count">({projects.length})</p>
     </div>
     <ul class="work-list">
@@ -201,10 +201,10 @@ import { extraProjects as projects } from '../data/projects';
 
       document.querySelectorAll('[data-row]').forEach((el) => {
         gsap.from(el, {
-          y: 60,
+          y: 24,
           opacity: 0,
-          duration: 0.8,
-          ease: 'power3.out',
+          duration: 1,
+          ease: 'power2.out',
           scrollTrigger: { trigger: el, start: 'top 92%' },
         });
       });
