@@ -78,7 +78,7 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
         // Swell that follows the cursor; fades with uAmp so it goes quiet
         // along with the rest of the wave once you scroll.
         float pd = distance(p.xz, uPointer);
-        float swell = exp(-pd * pd * 0.10) * (0.9 + 0.35 * sin(pd * 2.2 - uTime * 2.4));
+        float swell = exp(-pd * pd * 0.05) * (2.0 + 0.6 * sin(pd * 2.2 - uTime * 2.4));
         p.y += swell * uPointerStrength * uAmp;
         vElev = p.y;
         vSeed = aSeed;
@@ -153,8 +153,8 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
     camera.position.y += (4.2 - target.y * 0.6 - camera.position.y) * 0.04;
     camera.lookAt(0, 0, 0);
     const up = material.uniforms.uPointer.value;
-    up.x += (pointerTarget.x - up.x) * 0.06;
-    up.y += (pointerTarget.z - up.y) * 0.06;
+    up.x += (pointerTarget.x - up.x) * 0.09;
+    up.y += (pointerTarget.z - up.y) * 0.09;
     const strength = material.uniforms.uPointerStrength;
     strength.value += ((pointerSeen ? 1 : 0) - strength.value) * 0.04;
     renderer.render(scene, camera);

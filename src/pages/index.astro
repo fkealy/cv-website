@@ -160,7 +160,8 @@ import { featuredProjects as projects } from '../data/projects';
     .hero-title {
       font-weight: 600;
       font-size: clamp(3.8rem, 17vw, 15rem);
-      line-height: 0.95;
+      /* Roomy enough that the y's descender survives the overflow mask */
+      line-height: 1.12;
       letter-spacing: -0.04em;
       text-transform: none;
     }
