@@ -120,10 +120,17 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
       target.y = (e.clientY / window.innerHeight - 0.5) * 2;
       ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
       raycaster.setFromCamera(ndc, camera);
-      if (raycaster.ray.intersectPlane(wavePlane, hit)) {
-        pointerTarget.copy(hit);
-        pointerSeen = true;
-      }
+      // Above the horizon the ray misses the plane; sample it mid-flight
+      // instead so the swell still tracks the cursor.
+      if (!raycaster.ray.intersectPlane(wavePlane, hit)) raycaster.ray.at(16, hit);
+      // Keep the swell in the near band of the grid where perspective
+      // makes it visible; far hits shrink to nothing.
+      pointerTarget.set(
+        THREE.MathUtils.clamp(hit.x, -13, 13),
+        0,
+        THREE.MathUtils.clamp(hit.z, -10, 8),
+      );
+      pointerSeen = true;
     }, { passive: true });
   }
 
