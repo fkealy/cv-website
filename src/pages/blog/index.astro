@@ -31,7 +31,7 @@ const fmt = (d: Date) =>
       <ul class="post-list">
         {posts.map((post, i) => (
           <li class="post-row" data-row>
-            <a class="post-link" href={`/blog/${post.slug}`} data-hover>
+            <a class="post-link" href={`/blog/${post.id}`} data-hover>
               <span class="post-index">0{i + 1}</span>
               <span class="post-main">
                 <span class="post-title">{post.data.title}</span>
