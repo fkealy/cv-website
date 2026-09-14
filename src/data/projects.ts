@@ -7,6 +7,8 @@ export interface Project {
   year: string;
   blurb: string;
   link?: string;
+  /** App Store listing, shown as a second link in the front-page panel. */
+  appStore?: string;
   tags: string[];
   /** Where it runs — shown on the front-page work rows instead of the tech tags. */
   deploy?: string;
@@ -19,12 +21,13 @@ export const projects: Project[] = [
   {
     title: 'Agreed',
     year: '2026',
-    blurb: 'Swipe to match on group decisions: baby names, where to do your stag do, the best place to eat when you get there. Everyone swipes and it surfaces what you all agree on.',
+    blurb: 'Swipe to match on group decisions: baby names, where to do your stag do, the best place to eat when you get there. Everyone swipes and it surfaces what you all agree on. Now on the App Store.',
     link: 'https://getagreed.app',
-    tags: ['three.js', 'GSAP', 'Vite', 'Cloudflare'],
+    appStore: 'https://apps.apple.com/us/app/agreed-decide-together/id6789555845',
+    tags: ['three.js', 'GSAP', 'Vite', 'Cloudflare', 'iOS'],
     deploy: 'Runs on Cloudflare',
     slug: 'agreed',
-    story: 'Everyone swipes on their own phone and the app finds the overlap. No arguing, no spreadsheet. Vite and three.js doing the theatrics, Cloudflare doing the serving.',
+    story: 'Everyone swipes on their own phone and the app finds the overlap. No arguing, no spreadsheet. Started on the web, now an iPhone app too. Vite and three.js doing the theatrics, Cloudflare doing the serving.',
   },
   {
     title: 'Death House',

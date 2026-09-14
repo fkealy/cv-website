@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Website for fkealy, Freddie Kealy's AI-forward software & web agency, built with Astro 5: selected work with expanding case panels, a concepts page, a blog, and a quiet /cv page. Dark, animation-heavy design (GSAP + three.js), deployed to Cloudflare Pages. Positioning and copy rules live in the brand-voice skill and auto-memory — keep the homepage lean (hero → work → about → contact, no services section).
+Website for fkealy, Freddie Kealy's software & web practice (positioning line: websites and web apps for businesses that need them to work, design through to hosting, one person to call), built with Astro 5: selected work with expanding case panels, a concepts page, a blog, and a quiet /cv page. Dark, animation-heavy design (GSAP + three.js), deployed to Cloudflare Pages. Positioning and copy rules live in the brand-voice skill and auto-memory — keep the homepage lean (hero → work → about → contact, no services section).
 
 ## Tech Stack
 
@@ -46,6 +46,7 @@ Blog posts are managed via Astro Content Collections:
 
 - `src/layouts/V2Layout.astro`: shared shell for every page — head/meta, fonts (Space Grotesk + JetBrains Mono), WebGL canvas, grain overlay, custom cursor, auto-hiding topbar, design tokens (CSS custom properties) and base styles. Takes `title`, `description`, and `waveAmp` (particle wave intensity) props.
 - `src/scripts/v2.ts`: shared client behavior — `initGL()` (three.js particle wave), `initCursor()`, `initTopbar()`, `splitChars()` for text reveals, and the `reduceMotion` flag.
+- `src/scripts/work-preview.ts`: the selected-work previews. Screenshots are drawn on three.js planes with a signal-tuning shader (wipe-in through static, slice/RGB glitch bursts, cursor smear, 3D tilt on the phone shot) plus a cursor-trailing preview card over the closed list. The `<img>` tags stay as the no-WebGL / reduced-motion fallback.
 - Pages (`index.astro`, `blog/index.astro`, `blog/[...slug].astro`) hold their own section markup, page styles, and GSAP animation scripts.
 
 ### Animation conventions

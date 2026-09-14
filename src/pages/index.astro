@@ -6,7 +6,7 @@ import { featuredProjects as projects } from '../data/projects';
 <V2Layout>
   <!-- HERO -->
   <section class="hero" id="top">
-    <p class="hero-eyebrow"><span class="eyebrow-line"></span>An AI-forward agency for software &amp; websites</p>
+    <p class="hero-eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Websites and web apps for businesses that need them to work. Design through to hosting, one person to call.</span></p>
     <h1 class="hero-title" aria-label="fkealy">
       <span class="line"><span class="word" data-split>fkealy</span><span class="hero-dot">.</span></span>
     </h1>
@@ -30,7 +30,7 @@ import { featuredProjects as projects } from '../data/projects';
     <div class="marquee-track">
       {Array.from({ length: 2 }).map(() => (
         <span class="marquee-chunk">
-          AI-forward <i>✦</i> Idea to delivery <i>✦</i> Websites <i>✦</i> Products <i>✦</i> No drama at the back <i>✦</i> UK / Remote <i>✦</i>&nbsp;
+          Websites <i>✦</i> Web apps <i>✦</i> Design through to hosting <i>✦</i> One person to call <i>✦</i> Idea to delivery <i>✦</i> No drama at the back <i>✦</i> UK / Remote <i>✦</i>&nbsp;
         </span>
       ))}
     </div>
@@ -65,21 +65,34 @@ import { featuredProjects as projects } from '../data/projects';
           <div class="work-panel" id={`panel-${p.slug}`}>
             <div class="work-panel-inner">
               <div class="work-shots">
-                <img
-                  src={`/assets/work/${p.slug}-desktop.jpeg`}
-                  alt={`${p.title} on desktop`}
-                  loading="lazy"
-                  class="shot-desktop"
-                />
-                <img
-                  src={`/assets/work/${p.slug}-mobile.jpeg`}
-                  alt={`${p.title} on a phone`}
-                  loading="lazy"
-                  class="shot-mobile"
-                />
+                <div class="shot shot-desktop" data-src={`/assets/work/${p.slug}-desktop.jpeg`}>
+                  <img
+                    src={`/assets/work/${p.slug}-desktop.jpeg`}
+                    alt={`${p.title} on desktop`}
+                    loading="lazy"
+                    width="1440"
+                    height="900"
+                  />
+                  <i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i>
+                </div>
+                <div class="shot shot-mobile" data-src={`/assets/work/${p.slug}-mobile.jpeg`}>
+                  <img
+                    src={`/assets/work/${p.slug}-mobile.jpeg`}
+                    alt={`${p.title} on a phone`}
+                    loading="lazy"
+                    width="390"
+                    height="844"
+                  />
+                </div>
               </div>
+              <p class="work-shots-meta" aria-hidden="true">
+                <span>0{i + 1} — {p.title}</span>
+                <span>1440 × 900<span class="work-shots-mobdim"> <b>/</b> 390 × 844</span></span>
+                <span class="work-shots-stack">{p.tags.join(' · ')}</span>
+              </p>
               <div class="work-panel-text">
                 <p class="work-story">{p.story}</p>
+                <div class="work-links">
                 {p.link && (
                   <a
                     class="ghost-link work-live"
@@ -91,6 +104,18 @@ import { featuredProjects as projects } from '../data/projects';
                     See it live ↗
                   </a>
                 )}
+                {p.appStore && (
+                  <a
+                    class="ghost-link work-live"
+                    href={p.appStore}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-hover
+                  >
+                    App Store ↗
+                  </a>
+                )}
+                </div>
               </div>
             </div>
           </div>
@@ -153,9 +178,15 @@ import { featuredProjects as projects } from '../data/projects';
     }
     .eyebrow-line {
       display: inline-block;
-      width: 3rem;
+      flex: 0 0 3rem;
       height: 1px;
       background: var(--accent);
+    }
+    /* Two even lines when it wraps, never a lone word on the second. */
+    .eyebrow-text {
+      max-width: 64ch;
+      text-wrap: balance;
+      line-height: 1.6;
     }
     .hero-title {
       font-weight: 600;
@@ -345,26 +376,94 @@ import { featuredProjects as projects } from '../data/projects';
       min-height: 0;
     }
     .work-shots {
+      --bleed: 24px;
+      position: relative;
       display: flex;
       gap: clamp(0.8rem, 2vw, 1.4rem);
       align-items: flex-start;
       padding-top: 0.5rem;
     }
-    .work-shots img {
+    .shot {
+      position: relative;
+      background: var(--bg-soft);
+    }
+    .shot img {
       border: 1px solid var(--line);
-      border-radius: 4px;
       display: block;
-      height: auto;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .shot-desktop {
       flex: 1 1 0;
       min-width: 0;
       max-width: 720px;
+      aspect-ratio: 1440 / 900;
     }
     .shot-mobile {
       flex: 0 0 clamp(90px, 18vw, 200px);
       max-width: 200px;
+      aspect-ratio: 390 / 844;
     }
+    /* With WebGL the planes draw the shots; the imgs stay for layout and
+       as the no-GL / reduced-motion fallback. */
+    .has-work-gl .shot img { visibility: hidden; }
+    .work-gl {
+      position: absolute;
+      top: calc(0.5rem - var(--bleed));
+      left: calc(-1 * var(--bleed));
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* Corner ticks around the desktop shot: draw in once the row opens */
+    .tick {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border: 1px solid var(--accent);
+      opacity: 0;
+      transition: opacity 0.4s ease 0.5s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.5s;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .tick:nth-child(2) { top: -6px; left: -6px; border-width: 1px 0 0 1px; transform: translate(6px, 6px); }
+    .tick:nth-child(3) { top: -6px; right: -6px; border-width: 1px 1px 0 0; transform: translate(-6px, 6px); }
+    .tick:nth-child(4) { bottom: -6px; left: -6px; border-width: 0 0 1px 1px; transform: translate(6px, -6px); }
+    .tick:nth-child(5) { bottom: -6px; right: -6px; border-width: 0 1px 1px 0; transform: translate(-6px, -6px); }
+    .work-row.is-open .tick { opacity: 1; transform: translate(0, 0); }
+    .work-shots-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.9rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      opacity: 0;
+      transition: opacity 0.6s ease 0.55s;
+    }
+    .work-shots-meta b { font-weight: 400; color: var(--accent); padding: 0 0.3em; }
+    .work-row.is-open .work-shots-meta { opacity: 1; }
+    /* The cursor-trailing card over the closed list (desktop only) */
+    .work-peek {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 40;
+    }
+    .work-story,
+    .work-live {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.6s ease 0.4s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.4s;
+    }
+    .work-live { transition-delay: 0.5s; }
+    .work-row.is-open .work-story,
+    .work-row.is-open .work-live { opacity: 1; transform: translateY(0); }
     .work-panel-text {
       display: flex;
       align-items: baseline;
@@ -380,13 +479,20 @@ import { featuredProjects as projects } from '../data/projects';
       font-size: clamp(0.9rem, 1.9vw, 1.05rem);
       margin-top: clamp(1rem, 2.5vw, 1.6rem);
     }
+    .work-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
     .work-live { margin-top: clamp(1rem, 2.5vw, 1.6rem); }
     @media (max-width: 700px) {
-      .shot-mobile { display: none; }
+      .shot-mobile, .work-shots-mobdim, .work-shots-stack { display: none; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .work-panel, .work-arrow { transition: none !important; }
+      .work-panel, .work-arrow, .work-story, .work-live, .tick, .work-shots-meta { transition: none !important; }
     }
+    .no-motion .work-panel, .no-motion .work-arrow, .no-motion .work-story,
+    .no-motion .work-live, .no-motion .tick, .no-motion .work-shots-meta { transition: none !important; }
     .ghost-row {
       display: flex;
       flex-wrap: wrap;
@@ -474,28 +580,13 @@ import { featuredProjects as projects } from '../data/projects';
     import gsap from 'gsap';
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
     import { reduceMotion, splitChars } from '../scripts/v2';
+    import { initWorkList } from '../scripts/work-preview';
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Work rows: first click opens the panel; the live link sits inside it.
-    // One panel open at a time.
-    document.querySelectorAll('.work-toggle').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const row = btn.closest('.work-row');
-        if (!row) return;
-        const wasOpen = row.classList.contains('is-open');
-        document.querySelectorAll('.work-row.is-open').forEach((r) => {
-          r.classList.remove('is-open');
-          r.querySelector('.work-toggle')?.setAttribute('aria-expanded', 'false');
-        });
-        if (!wasOpen) {
-          row.classList.add('is-open');
-          btn.setAttribute('aria-expanded', 'true');
-        }
-        // The page height changes under the scroll triggers.
-        setTimeout(() => ScrollTrigger.refresh(), 600);
-      });
-    });
+    // Work rows: one panel open at a time, screenshots on WebGL planes with
+    // the cursor-trailing card. See scripts/work-preview.ts.
+    initWorkList();
 
     if (reduceMotion) {
       gsap.set('.hero-eyebrow, .hero-foot, .scroll-hint', { opacity: 1 });
