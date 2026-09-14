@@ -115,6 +115,17 @@ import { featuredProjects as projects } from '../data/projects';
                     App Store ↗
                   </a>
                 )}
+                {p.playStore && (
+                  <a
+                    class="ghost-link work-live"
+                    href={p.playStore}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-hover
+                  >
+                    Google Play ↗
+                  </a>
+                )}
                 </div>
               </div>
             </div>
@@ -283,7 +294,7 @@ import { featuredProjects as projects } from '../data/projects';
 
     /* Work list */
     .work-list { list-style: none; }
-    .work-row { border-bottom: 1px solid var(--line); }
+    .work-row { border-bottom: 1px solid var(--line); position: relative; }
     .work-toggle {
       width: 100%;
       background: none;
@@ -303,6 +314,7 @@ import { featuredProjects as projects } from '../data/projects';
       position: relative;
       transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     }
+    .work-link > * { position: relative; z-index: 1; }
     .work-link::before {
       content: '';
       position: absolute;
@@ -316,7 +328,9 @@ import { featuredProjects as projects } from '../data/projects';
       .work-link:hover { padding-left: 1.6rem; }
       .work-link:hover::before { opacity: 1; }
       .work-link:hover .work-title { color: var(--accent); }
-      .work-link:hover .work-arrow { transform: translate(4px, -4px); color: var(--accent); }
+      .work-link:hover .work-arrow { transform: translate(4px, -4px); color: var(--accent); text-shadow: 0 0 14px rgba(10, 10, 14, 0.95); }
+      /* The strip comes in under the label, so the label steps aside. */
+      .work-link:hover .work-side { opacity: 0; }
     }
     .work-index {
       font-family: var(--font-mono);
@@ -340,6 +354,7 @@ import { featuredProjects as projects } from '../data/projects';
       line-height: 1.5;
     }
     .work-side {
+      transition: opacity 0.3s ease;
       text-align: right;
       font-family: var(--font-mono);
       font-size: 0.75rem;
@@ -447,13 +462,12 @@ import { featuredProjects as projects } from '../data/projects';
     }
     .work-shots-meta b { font-weight: 400; color: var(--accent); padding: 0 0.3em; }
     .work-row.is-open .work-shots-meta { opacity: 1; }
-    /* The cursor-trailing card over the closed list (desktop only) */
-    .work-peek {
-      position: fixed;
-      top: 0;
-      left: 0;
+    /* The strip of screenshot that peels open inside a hovered row
+       (desktop only). It sits under the row's text. */
+    .work-strip {
+      position: absolute;
       pointer-events: none;
-      z-index: 40;
+      z-index: 0;
     }
     .work-story,
     .work-live {

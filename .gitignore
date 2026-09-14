@@ -28,3 +28,6 @@ old-site/
 
 # bun
 bun.lockb
+
+# private files that never ship
+src/private/
