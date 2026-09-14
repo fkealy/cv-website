@@ -1,8 +1,9 @@
-// Selected-work previews: the screenshots are drawn on WebGL planes with a
-// signal-tuning shader. Opening a row wipes the shot in through static with
-// a burst of slice/RGB glitch, the cursor smears pixels as it crosses the
-// image, and the phone shot tilts in 3D. Hovering a closed row peels a strip
-// of its screenshot open inside the row, right to left, and it stays put.
+// Selected-work previews: the screenshots are drawn on WebGL planes in the
+// same language as the particle wave behind the page. Opening a row
+// assembles the shot out of dots on a wave that damps to still, the cursor
+// makes a swell that settles, and the phone shot tilts in 3D. Hovering a
+// closed row opens a strip of its screenshot inside the row from the right
+// edge, behind a soft wave front, and it stays put.
 //
 // The <img> tags stay in the markup as the fallback; when this module takes
 // over they are hidden and only used as texture sources.
@@ -23,103 +24,82 @@ const FRAG = /* glsl */ `
   precision highp float;
   uniform sampler2D uTex;
   uniform float uTime;
-  uniform float uReveal;   // 0 = static, 1 = clean picture
-  uniform float uGlitch;   // burst strength
+  uniform float uReveal;   // 0 = nothing, 1 = the clean picture
+  uniform float uStir;     // wave energy; kicked on open, damps to still
   uniform float uHover;    // pointer over the plane
   uniform vec2 uMouse;     // pointer in plane uv
-  uniform vec2 uVel;       // pointer velocity in uv, smoothed
   uniform float uAspect;   // plane width / height
   uniform float uSeed;
   uniform vec2 uPx;        // one css pixel in uv
-  uniform float uAxis;     // 0 = wipe top to bottom, 1 = wipe right to left
-  uniform float uFade;     // torn left edge: how far in the tear reaches, in uv
+  uniform float uCell;     // dot pitch in css pixels
+  uniform float uAxis;     // 0 = assemble top to bottom, 1 = right to left
+  uniform float uFade;     // row strips: how far in the wave-front edge reaches
   uniform vec2 uUvScale;   // cover-fit of the texture onto the plane
   uniform vec2 uUvOffset;
   varying vec2 vUv;
 
   const vec3 ACCENT = vec3(0.961, 0.725, 0.259);
 
-  float hash(float n) { return fract(sin(n) * 43758.5453123); }
   float hash2(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
 
   void main() {
-    vec2 uv = vUv;
     float t = uTime;
     float rv = uReveal;
-    float revealing = step(0.001, 1.0 - rv);
+    float energy = clamp((1.0 - rv) + uStir, 0.0, 1.0);
 
-    // The wipe runs top to bottom (plane uv has y = 1 at the top), or
-    // right to left for the row strips.
-    float row = mix(1.0 - uv.y, 1.0 - uv.x, uAxis);
-    float edge = rv * 1.12 - 0.06;
-    float shown = step(row, edge);
-    float nearEdge = (1.0 - smoothstep(0.0, 0.16, edge - row)) * revealing;
+    // The picture is a field of dots, the same idea as the wave behind the
+    // page. Cells are square in css pixels.
+    vec2 cellsN = (1.0 / uPx) / uCell;
+    vec2 cid = floor(vUv * cellsN);
+    vec2 cuv = fract(vUv * cellsN) - 0.5;
+    vec2 ccenter = (cid + 0.5) / cellsN;
+    float thr = hash2(cid + uSeed);
 
-    // Torn left edge (row strips): each band tears at its own place and
-    // jitters, instead of a clean gradient. Heavier glitch just inside it.
-    float tearOn = step(0.001, uFade);
-    float eb = floor(vUv.y * 22.0);
-    float ef = floor(t * 9.0);
-    float tear = uFade * (0.25 + 0.75 * hash(eb * 5.3 + ef * 0.37 + uSeed)) * tearOn;
-    float edgeMask = step(tear, vUv.x);
-    float fringe = (1.0 - smoothstep(tear, tear + 0.06, vUv.x)) * edgeMask * tearOn;
+    // Assembly sweeps across the plane; each dot joins in its own time.
+    float sweep = mix(1.0 - vUv.y, 1.0 - vUv.x, uAxis);
+    float lr = smoothstep(0.0, 0.35, rv * 1.55 - sweep * 0.8 - thr * 0.45);
 
-    float g = clamp(uGlitch + nearEdge * 0.7 + fringe * 0.9, 0.0, 1.0);
+    // Row strips: the left boundary is a slow wave front, not a hard line.
+    float edgeOn = step(0.001, uFade);
+    float edgePos = uFade * (0.45 + 0.3 * sin(vUv.y * 9.0 + t * 1.3) + 0.25 * sin(vUv.y * 21.0 - t * 0.9));
+    lr *= mix(1.0, smoothstep(edgePos, edgePos + 0.16, vUv.x), edgeOn);
 
-    // Hover: a gentle push-in and parallax so the shot feels held, not printed.
+    // A wave runs through the dots while there is energy, then stills.
+    float wave = sin(ccenter.x * 22.0 + t * 3.0) * cos(ccenter.y * 16.0 + t * 2.3);
+    float wave2 = sin((ccenter.x + ccenter.y) * 30.0 - t * 2.6);
+    float radius = lr * (0.78 + 0.2 * wave * energy);
+    float dot = smoothstep(radius, radius - 0.14, length(cuv));
+    float cover = max(dot, smoothstep(0.86, 1.0, lr));
+
+    // While assembling, a dot carries its cell's colour; it resolves to the
+    // true pixel as it settles. The wave nudges where it samples from.
+    vec2 uv = mix(ccenter, vUv, smoothstep(0.3, 1.0, lr));
+    uv += vec2(wave, wave2) * 0.012 * energy;
+
+    // Hover: a gentle push-in, and a swell that ripples out from the cursor
+    // and settles once it leaves. Same physics as the hero.
     vec2 c = vec2(0.5);
-    uv = c + (uv - c) * (1.0 - 0.035 * uHover);
-    uv += (uMouse - c) * vec2(0.02, 0.014) * uHover;
-
-    // The cursor drags pixels with it; the smear follows its velocity.
+    uv = c + (uv - c) * (1.0 - 0.03 * uHover);
     vec2 d = (uv - uMouse) * vec2(uAspect, 1.0);
     float dist = length(d);
-    float infl = exp(-dist * dist * 26.0) * uHover;
-    uv -= uVel * infl * 1.6;
+    float sw = exp(-dist * dist * 22.0) * uHover;
+    float ring = sin(dist * 34.0 - t * 5.0);
+    uv += (d / max(dist, 0.0001)) * ring * sw * 0.012;
 
-    // Horizontal slices that jump at a stuttery 14fps.
-    float frame = floor(t * 14.0);
-    float bands = 16.0 + 32.0 * g;
-    float band = floor(uv.y * bands);
-    float on = step(1.0 - g * 0.55, hash(band * 3.7 + frame * 0.13 + uSeed));
-    uv.x += (hash(band * 9.1 + frame + uSeed) - 0.5) * 0.3 * g * on;
-
-    // Now and then a block of the picture jumps out of place.
-    float blockOn = step(0.9, hash(frame * 0.71 + uSeed)) * g;
-    vec2 blk = floor(uv * vec2(6.0, 4.0));
-    float bj = step(0.72, hash2(blk + frame)) * blockOn;
-    uv.x += (hash2(blk * 1.3 + frame) - 0.5) * 0.14 * bj;
-    uv.y += (hash2(blk * 2.1 + frame) - 0.5) * 0.06 * bj;
-
-    // RGB split: a whisper on hover, a shout while glitching.
-    float split = 0.0025 * uHover + 0.04 * g * g + infl * 0.014;
-    vec2 sdir = vec2(1.0, 0.18 * sin(t * 0.7));
     vec2 tuv = clamp(uv, 0.0, 1.0) * uUvScale + uUvOffset;
-    vec2 tsplit = sdir * split * uUvScale;
-    float r = texture2D(uTex, tuv + tsplit).r;
-    float gc = texture2D(uTex, tuv).g;
-    float b = texture2D(uTex, tuv - tsplit).b;
-    vec3 col = vec3(r, gc, b);
+    vec3 col = texture2D(uTex, tuv).rgb;
 
-    // Below the scan edge the picture hasn't tuned in yet: dim static.
-    float noise = hash2(floor(vUv * vec2(320.0, 200.0)) + frame);
-    vec3 stat = vec3(noise) * 0.12 + vec3(0.04, 0.04, 0.06);
-    col = mix(stat, col, shown);
-
-    // Amber scan edge.
-    float scan = exp(-abs(row - edge) * 80.0) * revealing;
-    col += ACCENT * scan * 1.1;
-
-    // Faint scanlines and grain, heavier while glitching.
-    col *= 1.0 - 0.045 * (0.5 + 0.5 * sin(vUv.y * 700.0)) * (0.35 + g);
-    col += (hash2(vUv * 1000.0 + fract(t)) - 0.5) * (0.025 + 0.12 * g);
+    // Amber on the dots still joining, and a warm lift under the swell.
+    float front = clamp(1.0 - abs(lr - 0.5) * 2.0, 0.0, 1.0) * max(1.0 - rv, edgeOn * 0.6);
+    col = mix(col, ACCENT, front * 0.45);
+    col += ACCENT * sw * 0.10 * (0.5 + 0.5 * ring);
 
     // One-pixel frame in the site's line colour.
     float bx = step(vUv.x, uPx.x) + step(1.0 - uPx.x, vUv.x);
     float by = step(vUv.y, uPx.y) + step(1.0 - uPx.y, vUv.y);
     col = mix(col, vec3(0.93, 0.92, 0.9), 0.22 * clamp(bx + by, 0.0, 1.0));
 
-    gl_FragColor = vec4(col, smoothstep(0.0, 0.06, rv) * edgeMask);
+    gl_FragColor = vec4(col, cover * smoothstep(0.0, 0.05, rv));
   }
 `;
 
@@ -166,23 +146,20 @@ class Shot {
   // pointer state, smoothed in update()
   hoverTarget = 0;
   mouseTarget = new THREE.Vector2(0.5, 0.5);
-  lastMouse = new THREE.Vector2(0.5, 0.5);
-  vel = new THREE.Vector2();
   rotTarget = new THREE.Vector2();
-  rotIdle = 0;
 
   constructor() {
     this.u = {
       uTex: { value: null },
       uTime: { value: 0 },
       uReveal: { value: 0 },
-      uGlitch: { value: 0 },
+      uStir: { value: 0 },
       uHover: { value: 0 },
       uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-      uVel: { value: new THREE.Vector2() },
       uAspect: { value: 1.6 },
       uSeed: { value: Math.random() * 100 },
       uPx: { value: new THREE.Vector2(0.002, 0.003) },
+      uCell: { value: 7 },
       uAxis: { value: 0 },
       uFade: { value: 0 },
       uUvScale: { value: new THREE.Vector2(1, 1) },
@@ -236,24 +213,18 @@ class Shot {
     this.mouseTarget.set((clientX - r.left) / r.width, 1 - (clientY - r.top) / r.height);
   }
 
-  burst(amount = 0.8, duration = 0.7) {
-    gsap.killTweensOf(this.u.uGlitch);
-    this.u.uGlitch.value = amount;
-    gsap.to(this.u.uGlitch, { value: 0, duration, ease: 'expo.out' });
+  // Put energy into the wave; it damps back to still.
+  stir(amount = 0.8, duration = 1.2) {
+    gsap.killTweensOf(this.u.uStir);
+    this.u.uStir.value = amount;
+    gsap.to(this.u.uStir, { value: 0, duration, ease: 'power2.out' });
   }
 
   update(t: number) {
     const u = this.u;
     u.uTime.value = t;
     u.uHover.value += (this.hoverTarget - u.uHover.value) * 0.08;
-    const m = u.uMouse.value as THREE.Vector2;
-    m.lerp(this.mouseTarget, 0.22);
-    // velocity of the smoothed pointer, decays when it stops
-    const v = u.uVel.value as THREE.Vector2;
-    this.vel.set(m.x - this.lastMouse.x, m.y - this.lastMouse.y);
-    this.lastMouse.copy(m);
-    v.lerp(this.vel, 0.35);
-    v.multiplyScalar(0.94);
+    (u.uMouse.value as THREE.Vector2).lerp(this.mouseTarget, 0.18);
   }
 }
 
@@ -314,7 +285,6 @@ function initPanel(rows: HTMLElement[]) {
   stage.scene.add(desk.mesh, mob.mesh);
 
   let current: HTMLElement | null = null;
-  let flickerTimer = 0;
   const ro = new ResizeObserver(() => layout());
 
   function shotEls(row: HTMLElement) {
@@ -342,16 +312,6 @@ function initPanel(rows: HTMLElement[]) {
     mob.mesh.visible = mr.width > 0 && !!mob.u.uTex.value;
   }
 
-  function scheduleFlicker() {
-    clearTimeout(flickerTimer);
-    flickerTimer = window.setTimeout(() => {
-      if (!current) return;
-      desk.burst(0.5, 0.3);
-      if (Math.random() > 0.5) mob.burst(0.35, 0.25);
-      scheduleFlicker();
-    }, 3500 + Math.random() * 4000);
-  }
-
   async function open(row: HTMLElement) {
     current = row;
     const { host, d, m } = shotEls(row);
@@ -375,22 +335,20 @@ function initPanel(rows: HTMLElement[]) {
     layout();
 
     gsap.killTweensOf([desk.u.uReveal, mob.u.uReveal, mob.mesh.position, mob.mesh.rotation]);
-    desk.burst(0.9, 1.1);
-    gsap.to(desk.u.uReveal, { value: 1, duration: 1.15, ease: 'power2.inOut', delay: 0.05 });
-    mob.burst(0.7, 1.0);
-    gsap.to(mob.u.uReveal, { value: 1, duration: 1.0, ease: 'power2.inOut', delay: 0.32 });
+    desk.stir(1, 1.6);
+    gsap.to(desk.u.uReveal, { value: 1, duration: 1.3, ease: 'power2.out', delay: 0.05 });
+    mob.stir(0.8, 1.4);
+    gsap.to(mob.u.uReveal, { value: 1, duration: 1.15, ease: 'power2.out', delay: 0.3 });
     gsap.fromTo(mob.mesh.position, { y: mob.mesh.position.y - 36 }, { y: mob.mesh.position.y, duration: 1.3, ease: 'expo.out', delay: 0.3 });
     mob.rotTarget.set(0, 0);
     gsap.fromTo(mob.mesh.rotation, { y: 0.55, x: 0.12 }, { y: 0, x: 0, duration: 1.4, ease: 'expo.out', delay: 0.3 });
-    scheduleFlicker();
   }
 
   function close(row: HTMLElement) {
     if (current !== row) return;
-    clearTimeout(flickerTimer);
-    desk.burst(1, 0.4);
-    mob.burst(1, 0.4);
-    gsap.to([desk.u.uReveal, mob.u.uReveal], { value: 0, duration: 0.32, ease: 'power2.in' });
+    desk.stir(0.6, 0.5);
+    mob.stir(0.6, 0.5);
+    gsap.to([desk.u.uReveal, mob.u.uReveal], { value: 0, duration: 0.4, ease: 'power2.in' });
     const closing = row;
     setTimeout(() => {
       if (current === closing) {
@@ -468,6 +426,7 @@ function initStrips(rows: HTMLElement[], isOpen: (row: HTMLElement) => boolean) 
     const shot = new Shot();
     shot.u.uAxis.value = 1;
     shot.u.uFade.value = 0.3;
+    shot.u.uCell.value = 6;
     stage.scene.add(shot.mesh);
     return { canvas, stage, shot, row: null as HTMLElement | null };
   };
@@ -524,8 +483,8 @@ function initStrips(rows: HTMLElement[], isOpen: (row: HTMLElement) => boolean) 
     slot.shot.setTexture(tex);
     layout(slot);
     gsap.killTweensOf(slot.shot.u.uReveal);
-    slot.shot.burst(0.7, 0.55);
-    gsap.to(slot.shot.u.uReveal, { value: 1, duration: 0.65, ease: 'power3.out' });
+    slot.shot.stir(0.8, 1.0);
+    gsap.to(slot.shot.u.uReveal, { value: 1, duration: 0.75, ease: 'power2.out' });
   }
 
   function hide(slot: ReturnType<typeof make>) {
@@ -533,10 +492,10 @@ function initStrips(rows: HTMLElement[], isOpen: (row: HTMLElement) => boolean) 
     if (!row) return;
     if (current === slot) current = null;
     gsap.killTweensOf(slot.shot.u.uReveal);
-    slot.shot.burst(0.5, 0.3);
+    slot.shot.stir(0.4, 0.4);
     gsap.to(slot.shot.u.uReveal, {
       value: 0,
-      duration: 0.3,
+      duration: 0.35,
       ease: 'power2.in',
       onComplete: () => {
         if (slot.row !== row || current === slot) return;
