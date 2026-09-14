@@ -3,7 +3,7 @@
 // assembles the shot out of dots on a wave that damps to still, the cursor
 // makes a swell that settles, and the phone shot tilts in 3D. Hovering a
 // closed row opens a strip of its screenshot inside the row from the right
-// edge, behind a soft wave front, and it stays put.
+// edge, its left side an even gradient of dots, and it stays put.
 //
 // The <img> tags stay in the markup as the fallback; when this module takes
 // over they are hidden and only used as texture sources.
@@ -33,7 +33,7 @@ const FRAG = /* glsl */ `
   uniform vec2 uPx;        // one css pixel in uv
   uniform float uCell;     // dot pitch in css pixels
   uniform float uAxis;     // 0 = assemble top to bottom, 1 = right to left
-  uniform float uFade;     // row strips: how far in the wave-front edge reaches
+  uniform float uFade;     // row strips: width of the dot gradient on the left edge, in uv
   uniform vec2 uUvScale;   // cover-fit of the texture onto the plane
   uniform vec2 uUvOffset;
   varying vec2 vUv;
@@ -55,19 +55,32 @@ const FRAG = /* glsl */ `
     vec2 ccenter = (cid + 0.5) / cellsN;
     float thr = hash2(cid + uSeed);
 
+    // The cursor swell, the same shape as the one in the wave behind the
+    // page: a bump about 110px wide with rings ~70px apart running out from
+    // the pointer. Measured in css pixels so it is the same size everywhere.
+    vec2 dpx = (vUv - uMouse) / uPx;
+    float dist = length(dpx);
+    float sw = exp(-dist * dist / (110.0 * 110.0)) * uHover;
+    float ring = sin(dist * 0.09 - t * 2.4);
+
     // Assembly sweeps across the plane; each dot joins in its own time.
     float sweep = mix(1.0 - vUv.y, 1.0 - vUv.x, uAxis);
     float lr = smoothstep(0.0, 0.35, rv * 1.55 - sweep * 0.8 - thr * 0.45);
 
-    // Row strips: the left boundary is a slow wave front, not a hard line.
+    // Row strips: the left side is a gradient of dot size, steady like the
+    // grid, and the swell pushes it out towards the pointer. Each dot starts
+    // at its own point so there is no straight line where they begin, and
+    // nothing reaches the plane's boundary.
     float edgeOn = step(0.001, uFade);
-    float edgePos = uFade * (0.45 + 0.3 * sin(vUv.y * 9.0 + t * 1.3) + 0.25 * sin(vUv.y * 21.0 - t * 0.9));
-    lr *= mix(1.0, smoothstep(edgePos, edgePos + 0.16, vUv.x), edgeOn);
+    float ex = vUv.x + 0.5 * uFade * sw * (0.7 + 0.3 * ring);
+    float start = 0.06 + thr * 0.35 * uFade;
+    float edge = smoothstep(start, start + uFade, ex) * smoothstep(0.0, 0.05, vUv.x);
+    lr *= mix(1.0, edge, edgeOn);
 
     // A wave runs through the dots while there is energy, then stills.
     float wave = sin(ccenter.x * 22.0 + t * 3.0) * cos(ccenter.y * 16.0 + t * 2.3);
     float wave2 = sin((ccenter.x + ccenter.y) * 30.0 - t * 2.6);
-    float radius = lr * (0.78 + 0.2 * wave * energy);
+    float radius = lr * (0.78 + 0.2 * wave * energy + 0.22 * sw * ring);
     float dot = smoothstep(radius, radius - 0.14, length(cuv));
     float cover = max(dot, smoothstep(0.86, 1.0, lr));
 
@@ -76,15 +89,11 @@ const FRAG = /* glsl */ `
     vec2 uv = mix(ccenter, vUv, smoothstep(0.3, 1.0, lr));
     uv += vec2(wave, wave2) * 0.012 * energy;
 
-    // Hover: a gentle push-in, and a swell that ripples out from the cursor
-    // and settles once it leaves. Same physics as the hero.
+    // Hover: a gentle push-in, and the swell lifts the picture in rings,
+    // settling once the pointer leaves.
     vec2 c = vec2(0.5);
     uv = c + (uv - c) * (1.0 - 0.03 * uHover);
-    vec2 d = (uv - uMouse) * vec2(uAspect, 1.0);
-    float dist = length(d);
-    float sw = exp(-dist * dist * 22.0) * uHover;
-    float ring = sin(dist * 34.0 - t * 5.0);
-    uv += (d / max(dist, 0.0001)) * ring * sw * 0.012;
+    uv += (dpx / max(dist, 0.0001)) * ring * sw * 5.0 * uPx;
 
     vec2 tuv = clamp(uv, 0.0, 1.0) * uUvScale + uUvOffset;
     vec3 col = texture2D(uTex, tuv).rgb;
@@ -425,7 +434,7 @@ function initStrips(rows: HTMLElement[], isOpen: (row: HTMLElement) => boolean) 
     const stage = new Stage(canvas);
     const shot = new Shot();
     shot.u.uAxis.value = 1;
-    shot.u.uFade.value = 0.3;
+    shot.u.uFade.value = 0.34;
     shot.u.uCell.value = 6;
     stage.scene.add(shot.mesh);
     return { canvas, stage, shot, row: null as HTMLElement | null };
@@ -513,10 +522,10 @@ function initStrips(rows: HTMLElement[], isOpen: (row: HTMLElement) => boolean) 
     link.addEventListener('pointerleave', () => { if (current?.row === row) hide(current); });
     link.addEventListener('pointermove', (e) => {
       if (current?.row !== row) return;
-      const s = current.shot;
-      s.pointer(e.clientX, e.clientY);
-      const r = s.rect;
-      s.hoverTarget = e.clientX > r.left && e.clientX < r.right ? 0.5 : 0;
+      // The swell follows the pointer anywhere over the row, so the strip's
+      // edge answers to it the way the wave behind does.
+      current.shot.pointer(e.clientX, e.clientY);
+      current.shot.hoverTarget = 0.8;
     }, { passive: true });
   });
   window.addEventListener('resize', () => slots.forEach(layout));
