@@ -25,17 +25,6 @@ import { featuredProjects as projects } from '../data/projects';
     </a>
   </section>
 
-  <!-- MARQUEE -->
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track">
-      {Array.from({ length: 2 }).map(() => (
-        <span class="marquee-chunk">
-          Websites <i>✦</i> Web apps <i>✦</i> Design through to hosting <i>✦</i> One person to call <i>✦</i> Idea to delivery <i>✦</i> No drama at the back <i>✦</i> UK / Remote <i>✦</i>&nbsp;
-        </span>
-      ))}
-    </div>
-  </div>
-
   <!-- WORK -->
   <section class="work" id="work">
     <div class="section-head">
@@ -153,7 +142,7 @@ import { featuredProjects as projects } from '../data/projects';
   <section class="contact" id="contact">
     <p class="contact-kicker" data-reveal>Got something to build?</p>
     <a class="contact-big" href="mailto:fkealy.dev@gmail.com?subject=Project%20enquiry" data-hover data-magnetic>
-      <span class="word" data-split>START&nbsp;A&nbsp;PROJECT</span>
+      <span class="word" data-split>START</span> <span class="word" data-split>A</span> <span class="word" data-split>PROJECT</span>
     </a>
     <div class="contact-links">
       <a href="https://github.com/fkealy" target="_blank" rel="noopener noreferrer" data-hover>GitHub</a>
@@ -255,40 +244,6 @@ import { featuredProjects as projects } from '../data/projects';
     @keyframes bob {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(5px); }
-    }
-
-    /* Marquee */
-    .marquee {
-      overflow: hidden;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      padding: 0.9rem 0;
-      background: rgba(10, 10, 14, 0.55);
-      backdrop-filter: blur(4px);
-      position: relative;
-      z-index: 2;
-    }
-    .marquee-track {
-      display: flex;
-      width: max-content;
-      /* Slow drift, not a ticker: the page stays calm. */
-      animation: marquee 75s linear infinite;
-    }
-    .marquee-chunk {
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: var(--ink-dim);
-      white-space: nowrap;
-    }
-    .marquee-chunk i {
-      font-style: normal;
-      color: var(--ink-dim);
-      padding: 0 1.2rem;
-    }
-    @keyframes marquee {
-      to { transform: translateX(-50%); }
     }
 
     /* Work list */
@@ -554,8 +509,15 @@ import { featuredProjects as projects } from '../data/projects';
       color: var(--accent);
       -webkit-text-stroke-color: var(--accent);
     }
+    /* Each word is its own split span, so a narrow screen wraps between
+       words and never inside one. */
+    .contact-big .word { white-space: nowrap; }
     @media (max-width: 600px) {
-      .contact-big { -webkit-text-stroke-width: 1.2px; }
+      .contact-big {
+        font-size: clamp(2.6rem, 15vw, 4.5rem);
+        line-height: 1.05;
+        -webkit-text-stroke-width: 1.2px;
+      }
     }
     .contact-links {
       display: flex;
@@ -585,7 +547,7 @@ import { featuredProjects as projects } from '../data/projects';
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .marquee-track, .scroll-hint svg { animation: none !important; }
+      .scroll-hint svg { animation: none !important; }
     }
   </style>
 
