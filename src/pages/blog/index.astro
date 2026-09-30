@@ -64,7 +64,7 @@ const fmt = (d: Date) =>
       display: flex;
       align-items: center;
       gap: 0.9rem;
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: clamp(0.7rem, 1.4vw, 0.85rem);
       text-transform: uppercase;
       letter-spacing: 0.18em;
@@ -79,10 +79,11 @@ const fmt = (d: Date) =>
       background: var(--accent);
     }
     .blog-title {
-      font-weight: 600;
-      font-size: clamp(3.4rem, 13vw, 11.5rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(4.8rem, 20vw, 17rem);
       line-height: 0.92;
-      letter-spacing: -0.03em;
+      letter-spacing: 0;
       text-transform: uppercase;
     }
     .blog-title .line { display: block; overflow: hidden; }
@@ -97,7 +98,7 @@ const fmt = (d: Date) =>
 
     .posts { padding-top: 0; }
     .posts-empty {
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       color: var(--ink-dim);
       text-transform: uppercase;
       letter-spacing: 0.15em;
@@ -137,9 +138,11 @@ const fmt = (d: Date) =>
     }
     .post-title {
       display: block;
-      font-size: clamp(1.3rem, 3.6vw, 2.6rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5.4vw, 3.9rem);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: 0;
       transition: color 0.3s ease;
     }
     .post-desc {
@@ -152,7 +155,7 @@ const fmt = (d: Date) =>
     }
     .post-side {
       text-align: right;
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: 0.75rem;
       color: var(--ink-dim);
       line-height: 1.9;

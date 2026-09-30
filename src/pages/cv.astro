@@ -116,7 +116,7 @@ const experience = [
       display: flex;
       align-items: center;
       gap: 0.9rem;
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: clamp(0.7rem, 1.4vw, 0.85rem);
       text-transform: uppercase;
       letter-spacing: 0.18em;
@@ -130,10 +130,11 @@ const experience = [
       background: var(--accent);
     }
     .cv-title {
-      font-weight: 600;
-      font-size: clamp(2.8rem, 11vw, 10rem);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(4rem, 17vw, 15rem);
       line-height: 0.92;
-      letter-spacing: -0.03em;
+      letter-spacing: 0;
       text-transform: uppercase;
     }
     .cv-title .line { display: block; overflow: hidden; }
@@ -188,21 +189,23 @@ const experience = [
     }
     .exp-item:last-child { border-bottom: none; }
     .exp-period {
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: 0.8rem;
       color: var(--accent);
       letter-spacing: 0.08em;
       padding-top: 0.45rem;
     }
     .exp-company {
-      font-size: clamp(1.3rem, 3.2vw, 2rem);
-      font-weight: 600;
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 4.8vw, 3rem);
+      font-weight: 800;
+      line-height: 1;
       text-transform: uppercase;
-      letter-spacing: -0.01em;
+      letter-spacing: 0;
     }
     .exp-company.is-wordmark { text-transform: none; }
     .exp-role {
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
@@ -223,7 +226,7 @@ const experience = [
 
     .cv-contact { padding-top: 0; }
     .cv-contact-note {
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: clamp(0.8rem, 1.7vw, 0.95rem);
       text-transform: uppercase;
       letter-spacing: 0.12em;

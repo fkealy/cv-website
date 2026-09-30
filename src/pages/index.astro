@@ -167,7 +167,7 @@ import { featuredProjects as projects } from '../data/projects';
       display: flex;
       align-items: center;
       gap: 0.9rem;
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: clamp(0.7rem, 1.4vw, 0.85rem);
       text-transform: uppercase;
       letter-spacing: 0.18em;
@@ -188,14 +188,21 @@ import { featuredProjects as projects } from '../data/projects';
       line-height: 1.6;
     }
     .hero-title {
-      font-weight: 600;
-      font-size: clamp(3.8rem, 17vw, 15rem);
-      /* Roomy enough that the y's descender survives the overflow mask */
-      line-height: 1.12;
-      letter-spacing: -0.04em;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(6rem, 22vw, 19rem);
+      line-height: 1.02;
+      letter-spacing: 0;
       text-transform: none;
     }
-    .hero-title .line { display: block; overflow: hidden; }
+    /* The mask reaches below the line box so the y's descender isn't clipped;
+       the negative margin keeps the spacing tight. */
+    .hero-title .line {
+      display: block;
+      overflow: hidden;
+      padding-bottom: 0.14em;
+      margin-bottom: -0.14em;
+    }
     .word { display: inline-block; }
     .hero-dot {
       display: inline-block;
@@ -217,7 +224,7 @@ import { featuredProjects as projects } from '../data/projects';
       color: var(--ink);
     }
     .hero-meta {
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.14em;
@@ -234,7 +241,7 @@ import { featuredProjects as projects } from '../data/projects';
       gap: 0.7rem;
       color: var(--ink-dim);
       text-decoration: none;
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.2em;
@@ -293,9 +300,11 @@ import { featuredProjects as projects } from '../data/projects';
     }
     .work-title {
       display: block;
-      font-size: clamp(1.5rem, 4.5vw, 3.2rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0;
       text-transform: uppercase;
       transition: color 0.3s ease;
     }
@@ -310,7 +319,7 @@ import { featuredProjects as projects } from '../data/projects';
     .work-side {
       transition: opacity 0.3s ease;
       text-align: right;
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: 0.75rem;
       color: var(--ink-dim);
       line-height: 1.9;
@@ -485,7 +494,7 @@ import { featuredProjects as projects } from '../data/projects';
       padding-bottom: 3rem;
     }
     .contact-kicker {
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       text-transform: uppercase;
       letter-spacing: 0.2em;
       font-size: clamp(0.75rem, 1.6vw, 0.95rem);
@@ -494,9 +503,10 @@ import { featuredProjects as projects } from '../data/projects';
     }
     .contact-big {
       display: inline-block;
-      font-size: clamp(2.2rem, 9.5vw, 8.5rem);
-      font-weight: 600;
-      letter-spacing: -0.03em;
+      font-family: var(--font-display);
+      font-size: clamp(3.4rem, 15vw, 14rem);
+      font-weight: 800;
+      letter-spacing: 0;
       color: transparent;
       -webkit-text-stroke: 2px var(--ink);
       text-decoration: none;
@@ -514,7 +524,7 @@ import { featuredProjects as projects } from '../data/projects';
     .contact-big .word { white-space: nowrap; }
     @media (max-width: 600px) {
       .contact-big {
-        font-size: clamp(2.6rem, 15vw, 4.5rem);
+        font-size: clamp(3.6rem, 22vw, 7rem);
         line-height: 1.05;
         -webkit-text-stroke-width: 1.2px;
       }
@@ -529,7 +539,7 @@ import { featuredProjects as projects } from '../data/projects';
     .contact-links a {
       color: var(--ink);
       text-decoration: none;
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 0.14em;
@@ -540,7 +550,7 @@ import { featuredProjects as projects } from '../data/projects';
     .contact-links a:hover { color: var(--accent); border-color: var(--accent); }
     .contact-foot {
       margin-top: clamp(2.5rem, 6vw, 4rem);
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: 0.72rem;
       color: var(--ink-dim);
       letter-spacing: 0.08em;
