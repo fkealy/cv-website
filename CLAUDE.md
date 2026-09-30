@@ -46,8 +46,15 @@ Blog posts are managed via Astro Content Collections:
 
 - `src/layouts/V2Layout.astro`: shared shell for every page — head/meta, fonts (Big Shoulders Display for big display type only, Archivo for everything else, JetBrains Mono kept to numeric indices, screenshot specs and code), WebGL canvas, grain overlay, custom cursor, auto-hiding topbar, design tokens (CSS custom properties) and base styles. Takes `title`, `description`, and `waveAmp` (particle wave intensity) props.
 - `src/scripts/v2.ts`: shared client behavior — `initGL()` (three.js particle wave), `initCursor()`, `initTopbar()`, `splitChars()` for text reveals, and the `reduceMotion` flag.
+- `src/scripts/theme.ts`: the dark/inverted theme switch. The full stops in the hero wordmark and the topbar logo are `<button data-theme-toggle>`s (the topbar one sits beside the logo link, not inside it). Clicking one grows a square out of that full stop via the View Transitions API and reveals the other theme; reduced motion swaps instantly. The choice is saved in `localStorage` (`fk-theme`) and an inline script in V2Layout's `<head>` applies it before first paint. The wave in `v2.ts` listens for the `fk:theme` event.
 - `src/scripts/work-preview.ts`: the selected-work previews. Screenshots are drawn on three.js planes in the same language as the particle wave: the shot assembles out of dots on a wave that damps to still, the cursor makes a swell that settles, the phone shot tilts in 3D, and hovering a closed row opens a strip of its screenshot inside the row, its left edge an even, steady gradient of dots. Nothing moves when idle; no glitch/static vocabulary (it contradicts "built to keep working"). The `<img>` tags stay as the no-WebGL / reduced-motion fallback.
 - Pages (`index.astro`, `blog/index.astro`, `blog/[...slug].astro`) hold their own section markup, page styles, and GSAP animation scripts.
+
+### Themes
+
+- Dark is the default and the brand. The inverted theme (`<html data-theme="inverted">`) only reuses the dark theme's colours: the amber becomes the page, black the text, the off-white the highlight. Don't add new colours to it.
+- Style with the tokens on `:root` so both themes work. Use `--accent` for big highlights and `--accent-text` for small highlighted text (eyebrows, dates, link hovers, focus rings): it is amber on dark and black when inverted, because off-white on amber is too faint at small sizes.
+- The particle wave uses additive blending on dark and normal blending when inverted (additive washes out over amber).
 
 ### Animation conventions
 
