@@ -23,6 +23,15 @@ const {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
   <meta name="theme-color" content="#0a0a0e" />
+  <script is:inline>
+    // Apply a saved inverted theme before first paint so it doesn't flash dark.
+    try {
+      if (localStorage.getItem('fk-theme') === 'inverted') {
+        document.documentElement.dataset.theme = 'inverted';
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f5b942');
+      }
+    } catch (e) {}
+  </script>
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
@@ -43,7 +52,10 @@ const {
   <div class="cursor" aria-hidden="true"><div class="cursor-dot"></div></div>
 
   <header class="topbar">
-    <a class="brand" href="/" data-hover>fkealy<span class="brand-dot">.</span></a>
+    <!-- The full stop sits outside the link: it's the theme switch. -->
+    <div class="brand-mark">
+      <a class="brand" href="/" data-hover>fkealy</a><button class="brand-dot" type="button" aria-label="Invert the colours" data-theme-toggle data-hover>.</button>
+    </div>
     <nav class="topnav" aria-label="Primary">
       <a href="/#work" data-hover>Work</a>
       <a href="/#about" class="topnav-secondary" data-hover>About</a>
@@ -64,11 +76,34 @@ const {
       --ink: #f2efe8;
       --ink-dim: #8d8a94;
       --accent: #f5b942;
+      /* Small highlighted text. Same as --accent here; black when inverted,
+         where off-white on amber is too faint to read at small sizes. */
+      --accent-text: #f5b942;
       --line: rgba(242, 239, 232, 0.14);
       /* Display is condensed, so keep it to big type; everything else is --font-body. */
       --font-display: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
       --font-body: 'Archivo', system-ui, sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      color-scheme: dark;
+    }
+    /* The inverted theme, opened from the hero's full stop. It only reuses
+       the dark theme's colours: the amber becomes the page, black the text,
+       and the off-white the highlight. */
+    :root[data-theme='inverted'] {
+      --bg: #f5b942;
+      --bg-soft: rgba(10, 10, 14, 0.06);
+      --ink: #0a0a0e;
+      --ink-dim: rgba(10, 10, 14, 0.68);
+      --accent: #f2efe8;
+      --accent-text: #0a0a0e;
+      --line: rgba(10, 10, 14, 0.2);
+      color-scheme: light;
+    }
+    /* The theme portal animates the new snapshot itself (see theme.ts). */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+      mix-blend-mode: normal;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -87,7 +122,7 @@ const {
       min-height: 100vh;
     }
 
-    ::selection { background: var(--accent); color: var(--bg); }
+    ::selection { background: var(--accent-text); color: var(--bg); }
 
     #gl {
       position: fixed;
@@ -133,6 +168,9 @@ const {
       transition: transform 0.25s ease;
     }
     .cursor.is-hover .cursor-dot { transform: scale(3.2); }
+    /* Difference blending only reads right over the dark theme. */
+    [data-theme='inverted'] .cursor-dot,
+    [data-theme='inverted'] .topbar { mix-blend-mode: normal; }
     @media (pointer: fine) {
       .cursor { display: block; }
     }
@@ -167,7 +205,22 @@ const {
       /* The wordmark is lowercase; the topbar defaults everything to uppercase. */
       text-transform: none !important;
     }
-    .brand-dot { color: var(--accent); }
+    .brand-mark { display: inline-flex; align-items: baseline; }
+    .brand-dot {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--accent);
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+    .brand-dot:focus-visible {
+      outline: 2px solid var(--accent-text);
+      outline-offset: 3px;
+    }
     .topnav { display: flex; gap: 1.6rem; }
     .topnav a { opacity: 0.75; transition: opacity 0.2s; }
     .topnav a:hover { opacity: 1; }
@@ -228,7 +281,7 @@ const {
       padding: 0.9rem 1.6rem;
       transition: color 0.25s, border-color 0.25s;
     }
-    .ghost-link:hover { color: var(--accent); border-color: var(--accent); }
+    .ghost-link:hover { color: var(--accent-text); border-color: var(--accent-text); }
 
     @media (prefers-reduced-motion: reduce) {
       .grain { animation: none !important; }
@@ -238,6 +291,7 @@ const {
 
   <script>
     import { initGL, initCursor, initTopbar } from '../scripts/v2';
+    import { initThemeToggle } from '../scripts/theme';
 
     initGL({
       amp: Number(document.body.dataset.waveAmp || 1),
@@ -245,6 +299,7 @@ const {
     });
     initCursor();
     initTopbar();
+    initThemeToggle();
   </script>
 </body>
 </html>

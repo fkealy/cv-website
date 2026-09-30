@@ -59,6 +59,7 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
       uPixelRatio: { value: renderer.getPixelRatio() },
       uPointer: { value: new THREE.Vector2(999, 999) },
       uPointerStrength: { value: 0 },
+      uInvert: { value: 0 },
     },
     vertexShader: /* glsl */ `
       uniform float uTime;
@@ -88,6 +89,7 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
       }
     `,
     fragmentShader: /* glsl */ `
+      uniform float uInvert;
       varying float vElev;
       varying float vSeed;
       void main() {
@@ -95,16 +97,29 @@ export function initGL({ amp = 1.0, calmOnScroll = '' } = {}) {
         float d = length(uv);
         if (d > 0.5) discard;
         float glow = smoothstep(0.5, 0.0, d);
-        vec3 deep = vec3(0.16, 0.20, 0.38);
-        vec3 amber = vec3(0.96, 0.73, 0.26);
+        // Inverted theme: the dots go black and off-white over the amber page.
+        vec3 deep = mix(vec3(0.16, 0.20, 0.38), vec3(0.04, 0.04, 0.055), uInvert);
+        vec3 amber = mix(vec3(0.96, 0.73, 0.26), vec3(0.95, 0.94, 0.91), uInvert);
         vec3 col = mix(deep, amber, smoothstep(-0.4, 1.2, vElev) * (0.35 + vSeed * 0.65));
-        gl_FragColor = vec4(col, glow * 0.85);
+        gl_FragColor = vec4(col, glow * mix(0.85, 0.7, uInvert));
       }
     `,
   });
 
   const points = new THREE.Points(geometry, material);
   scene.add(points);
+
+  // Additive blending adds light, so over the amber page the dots would
+  // wash out; the inverted theme draws them with normal blending.
+  const syncTheme = () => {
+    const inverted = document.documentElement.dataset.theme === 'inverted';
+    material.uniforms.uInvert.value = inverted ? 1 : 0;
+    material.blending = inverted ? THREE.NormalBlending : THREE.AdditiveBlending;
+    material.needsUpdate = true;
+    renderer.render(scene, camera);
+  };
+  syncTheme();
+  document.addEventListener('fk:theme', syncTheme);
 
   // Mouse parallax + cursor swell target (raycast onto the wave plane)
   const target = { x: 0, y: 0 };
