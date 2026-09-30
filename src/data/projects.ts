@@ -35,6 +35,16 @@ export const projects: Project[] = [
     story: 'Everyone swipes on their own phone and it finds the overlap. No arguing, no spreadsheet. Designed and built by us, from a sketch to a live web app and native apps on iOS and Android, with paid subscriptions through Paddle.',
   },
   {
+    title: 'Studio Rowan',
+    year: '2026',
+    blurb: 'A single-page launch site for a reusable hotel slider, built from the brand guidelines. The slider turns in 3D, and the case for switching builds as you scroll.',
+    link: 'https://studiorowan.co.uk',
+    tags: ['three.js', 'Cloudflare'],
+    deploy: 'Single-page website',
+    slug: 'studio-rowan',
+    story: 'Studio Rowan handed over their brand guidelines and their first product: a washable slider for hotels and spas, made to replace the disposable slippers that get worn for a few minutes and binned. We built it as one page that tells the story as you scroll. It opens on 70,000 dots, one for every pair a single hotel throws away in a year. Further down you can drag the slider round and look at it from every side, then put in how many pairs a hotel gets through and see the saving in pounds and in kilos of landfill. The last section takes pilot applications and preorders for the first shipment in April 2027.',
+  },
+  {
     title: 'Death House',
     year: '2026',
     blurb: 'A stickman brawler set in Death\'s house, with a small spirit in tow and a public speedrun leaderboard.',
