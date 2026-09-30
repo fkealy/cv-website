@@ -3,10 +3,18 @@ import V2Layout from '../layouts/V2Layout.astro';
 
 const experience = [
   {
+    period: '2026 — now',
+    company: 'fkealy',
+    role: 'Founder',
+    link: { text: 'Agreed', href: 'https://getagreed.app' },
+    note: 'Shipped Agreed, a group decision app, to the web, the App Store and Google Play, with paid subscriptions. Also builds websites for small businesses.',
+  },
+  {
     period: '2024 — now',
     company: 'Yotpoint',
     role: 'Technical Co-Founder',
-    note: 'Building the product end to end: Next.js front, Node and AWS behind it.',
+    link: { text: 'yotpoint.com', href: 'https://www.yotpoint.com' },
+    note: 'Building yotpoint.com end to end: Next.js front, Node and AWS behind it.',
   },
   {
     period: '2023 — 24',
@@ -71,9 +79,17 @@ const experience = [
           <li class="exp-item" data-row>
             <div class="exp-period">{e.period}</div>
             <div class="exp-body">
-              <h3 class="exp-company">{e.company}</h3>
+              <h3 class:list={['exp-company', { 'is-wordmark': e.company === 'fkealy' }]}>{e.company}</h3>
               <p class="exp-role">{e.role}</p>
-              <p class="exp-note">{e.note}</p>
+              <p class="exp-note">
+                {e.link ? (
+                  <>
+                    {e.note.split(e.link.text)[0]}
+                    <a href={e.link.href} target="_blank" rel="noopener noreferrer" data-hover>{e.link.text}</a>
+                    {e.note.split(e.link.text).slice(1).join(e.link.text)}
+                  </>
+                ) : e.note}
+              </p>
             </div>
           </li>
         ))}
@@ -184,6 +200,7 @@ const experience = [
       text-transform: uppercase;
       letter-spacing: -0.01em;
     }
+    .exp-company.is-wordmark { text-transform: none; }
     .exp-role {
       font-family: var(--font-mono);
       font-size: 0.78rem;
@@ -193,6 +210,13 @@ const experience = [
       margin: 0.3rem 0 0.7rem;
     }
     .exp-note { color: var(--ink-dim); line-height: 1.6; max-width: 60ch; }
+    .exp-note a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      transition: color 0.25s, border-color 0.25s;
+    }
+    .exp-note a:hover { color: var(--accent); border-color: var(--accent); }
     @media (max-width: 600px) {
       .exp-item { grid-template-columns: 1fr; gap: 0.4rem; }
     }
